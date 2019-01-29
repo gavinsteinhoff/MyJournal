@@ -21,7 +21,8 @@ namespace MyJournal.Controllers
         // GET: Journals
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Journals.ToListAsync());
+            //return View(await _context.Journals.ToListAsync());
+            return View(await _context.Journals.Where(j => j.JournalUser == User.Identity.Name).ToListAsync());
         }
 
         // GET: Journals/Details/5
@@ -35,6 +36,11 @@ namespace MyJournal.Controllers
             var journal = await _context.Journals
                 .SingleOrDefaultAsync(m => m.JournalID == id);
             if (journal == null)
+            {
+                return NotFound();
+            }
+
+            if (journal.JournalUser != User.Identity.Name)
             {
                 return NotFound();
             }
@@ -57,6 +63,8 @@ namespace MyJournal.Controllers
         {
             if (ModelState.IsValid)
             {
+                journal.JournalUser = User.Identity.Name;
+                journal.JournalDateTime = DateTime.Now;
                 _context.Add(journal);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -71,9 +79,9 @@ namespace MyJournal.Controllers
             {
                 return NotFound();
             }
-
+            
             var journal = await _context.Journals.SingleOrDefaultAsync(m => m.JournalID == id);
-            if (journal == null)
+            if (journal == null || journal.JournalUser != User.Identity.Name)
             {
                 return NotFound();
             }
@@ -125,7 +133,7 @@ namespace MyJournal.Controllers
 
             var journal = await _context.Journals
                 .SingleOrDefaultAsync(m => m.JournalID == id);
-            if (journal == null)
+            if (journal == null || journal.JournalUser != User.Identity.Name)
             {
                 return NotFound();
             }

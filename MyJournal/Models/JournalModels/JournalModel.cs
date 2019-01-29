@@ -29,6 +29,8 @@ namespace MyJournal.Models.JournalModels
         [HiddenInput]
         public DateTime JournalDateTime { get; set; }
 
+        public string JournalUser { get; set; }
+
 
     }
 }
