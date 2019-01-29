@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyJournal.Models.JournalModels;
+using MyJournal.Data;
 
 namespace MyJournal.Controllers
 {

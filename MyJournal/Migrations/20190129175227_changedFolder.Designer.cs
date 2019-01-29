@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
-using MyJournal.Models.JournalModels;
+using MyJournal.Data;
 using System;
 
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(JournalContext))]
-    [Migration("20190124175754_changedJournalPermissions")]
-    partial class changedJournalPermissions
+    [Migration("20190129175227_changedFolder")]
+    partial class changedFolder
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,12 @@ namespace MyJournal.Migrations
                     b.Property<int>("JournalID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("JournalText");
+                    b.Property<DateTime>("JournalDateTime");
+
+                    b.Property<string>("JournalText")
+                        .IsRequired();
+
+                    b.Property<string>("JournalUser");
 
                     b.HasKey("JournalID");
 

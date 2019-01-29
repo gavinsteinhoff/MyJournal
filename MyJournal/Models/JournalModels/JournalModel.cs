@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MyJournal.Models.JournalModels
 {
-    public class JournalContext : DbContext
-    {
-        public JournalContext(DbContextOptions<JournalContext> options)
-            : base(options)
-        { }
+    //public class JournalContext : DbContext
+    //{
+    //    public JournalContext(DbContextOptions<JournalContext> options)
+    //        : base(options)
+    //    { }
 
-        public DbSet<Journal> Journals { get; set; }
-    }
+    //    public DbSet<Journal> Journals { get; set; }
+    //}
        
     public class Journal
     {

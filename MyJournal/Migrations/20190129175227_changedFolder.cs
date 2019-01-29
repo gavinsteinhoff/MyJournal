@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MyJournal.Migrations
 {
-    public partial class initialJournalCreate : Migration
+    public partial class changedFolder : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,10 @@ namespace MyJournal.Migrations
                 columns: table => new
                 {
                     JournalID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    JournalDateTime = table.Column<DateTime>(nullable: false),
+                    JournalText = table.Column<string>(nullable: false),
+                    JournalUser = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
