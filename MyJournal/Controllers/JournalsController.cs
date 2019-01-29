@@ -19,6 +19,28 @@ namespace MyJournal.Controllers
             _context = context;
         }
 
+
+        /// <summary>
+        /// Checks to see if the current user owns a journal.
+        /// Doesn't check to see if journal exist
+        /// </summary>
+        /// <param name="journal">
+        /// A journal object from the JournalContext
+        /// </param>
+        /// <returns>
+        /// Returns true if the user owns the journal, false if not
+        /// </returns>
+        private bool AuthJournal(Journal journal)
+        {
+            if (journal.JournalUser == User.Identity.Name)
+            {
+                return true;
+            }
+            return false;
+        }
+        //End Custom
+
+
         // GET: Journals
         public async Task<IActionResult> Index()
         {
@@ -40,8 +62,9 @@ namespace MyJournal.Controllers
             {
                 return NotFound();
             }
+            
 
-            if (journal.JournalUser != User.Identity.Name)
+            if (!AuthJournal(journal))
             {
                 return NotFound();
             }
@@ -82,10 +105,16 @@ namespace MyJournal.Controllers
             }
             
             var journal = await _context.Journals.SingleOrDefaultAsync(m => m.JournalID == id);
-            if (journal == null || journal.JournalUser != User.Identity.Name)
+            if (journal == null)
             {
                 return NotFound();
             }
+
+            if (!AuthJournal(journal))
+            {
+                return NotFound();
+            }
+
             return View(journal);
         }
 
@@ -134,7 +163,12 @@ namespace MyJournal.Controllers
 
             var journal = await _context.Journals
                 .SingleOrDefaultAsync(m => m.JournalID == id);
-            if (journal == null || journal.JournalUser != User.Identity.Name)
+            if (journal == null)
+            {
+                return NotFound();
+            }
+
+            if (!AuthJournal(journal))
             {
                 return NotFound();
             }

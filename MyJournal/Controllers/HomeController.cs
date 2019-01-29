@@ -12,6 +12,10 @@ namespace MyJournal.Controllers
     {
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "journals", new { area = "" });
+            }
             return View();
         }
 
