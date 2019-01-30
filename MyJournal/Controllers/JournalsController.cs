@@ -118,6 +118,11 @@ namespace MyJournal.Controllers
                 return NotFound();
             }
 
+            if ((DateTime.Now - journal.JournalDateTime).TotalMinutes > 60)
+            {
+                return RedirectToAction("Details", new { id = journal.JournalID });
+            }
+
             return View(journal);
         }
 
