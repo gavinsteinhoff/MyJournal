@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyJournal.Models.JournalModels;
 using MyJournal.Data;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyJournal.Controllers
 {
+    [Authorize]
     public class JournalsController : Controller
     {
         private readonly JournalContext _context;
@@ -43,7 +46,7 @@ namespace MyJournal.Controllers
 
         // GET: Journals
         public async Task<IActionResult> Index()
-        {
+        {  
             //return View(await _context.Journals.ToListAsync());
             return View(await _context.Journals.Where(j => j.JournalUser == User.Identity.Name).ToListAsync());
         }
