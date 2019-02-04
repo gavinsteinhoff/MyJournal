@@ -25,6 +25,18 @@ My Journal is a website designed for daily journaling online along with statisti
 - Third Party Logins (Google/Facebook/etc.)
 - 2-Step Authentication
 - Database Server
+- Journal Templates
+
+## Stats to Collect
+- User Submited
+    - Mood Level
+    - Hours of Sleep
+    - Diet Level
+    - Exercise hours
+- Computed
+    - Number of words
+    - Typing Speed
+    - IBM Watson Mood 
 
 ## Roadmap
 - User authentication
