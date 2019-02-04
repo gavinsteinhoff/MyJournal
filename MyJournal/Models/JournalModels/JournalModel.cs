@@ -31,6 +31,7 @@ namespace MyJournal.Models.JournalModels
 
         public string JournalUser { get; set; }
 
-
+        [Required]
+        public int mood { get; set; }
     }
 }
