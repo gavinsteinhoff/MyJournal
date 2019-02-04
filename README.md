@@ -13,8 +13,18 @@ My Journal is a website designed for daily journaling online along with statisti
     - Numbers of words
     - time spent typing
     - distractions
-- Personalized daily, monthly, and yearly reports
+- Personalized daily, weekly, monthly, and yearly reports
 - Generalized reports about the user base
+    - Graphs
+    - Reports
+    - Survey Data
+- User Survey Questions
+- Information Sharing Between Users (Doctor/Patient Relationship)
+- Date Ranges
+- Reset Password / Email Verification
+- Third Party Logins (Google/Facebook/etc.)
+- 2-Step Authentication
+- Database Server
 
 ## Roadmap
 - User authentication
