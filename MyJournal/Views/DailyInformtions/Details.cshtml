@@ -1,0 +1,48 @@
+﻿@model MyJournal.Models.CustomModels.DailyInformtion
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>DailyInformtion</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.JournalText)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.JournalText)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DailyInformtionDateTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DailyInformtionDateTime)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DailyInformtionUser)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DailyInformtionUser)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UserMood)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserMood)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.DailyInformtionID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

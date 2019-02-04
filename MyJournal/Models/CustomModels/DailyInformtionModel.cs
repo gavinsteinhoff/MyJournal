@@ -24,15 +24,19 @@ namespace MyJournal.Models.CustomModels
         public int DailyInformtionID { get; set; }
 
         [Required]
+        public string Title { get; set; }
+
+        [Required]
         public string JournalText {get;set;}
 
         [DataType(DataType.DateTime)]
         [HiddenInput]
         public DateTime DailyInformtionDateTime { get; set; }
 
+        [HiddenInput]
         public string DailyInformtionUser { get; set; }
 
         [Required]
-        public int mood { get; set; }
+        public int UserMood { get; set; }
     }
 }
