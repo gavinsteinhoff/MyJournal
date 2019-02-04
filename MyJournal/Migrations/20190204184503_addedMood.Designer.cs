@@ -11,9 +11,10 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(JournalContext))]
-    partial class JournalContextModelSnapshot : ModelSnapshot
+    [Migration("20190204184503_addedMood")]
+    partial class addedMood
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
