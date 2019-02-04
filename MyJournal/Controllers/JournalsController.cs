@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MyJournal.Models.JournalModels;
+using MyJournal.Models.CustomModels;
 using MyJournal.Data;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Authorization;
@@ -15,9 +15,9 @@ namespace MyJournal.Controllers
     [Authorize]
     public class JournalsController : Controller
     {
-        private readonly JournalContext _context;
+        private readonly MyJournalContext _context;
 
-        public JournalsController(JournalContext context)
+        public JournalsController(MyJournalContext context)
         {
             _context = context;
         }
@@ -33,9 +33,9 @@ namespace MyJournal.Controllers
         /// <returns>
         /// Returns true if the user owns the journal, false if not
         /// </returns>
-        private bool AuthJournal(Journal journal)
+        private bool AuthJournal(DailyInformtion dailyInformtion)
         {
-            if (journal.JournalUser == User.Identity.Name)
+            if (dailyInformtion.DailyInformtionUser == User.Identity.Name)
             {
                 return true;
             }
@@ -48,7 +48,7 @@ namespace MyJournal.Controllers
         public async Task<IActionResult> Index()
         {  
             //return View(await _context.Journals.ToListAsync());
-            return View(await _context.Journals.Where(j => j.JournalUser == User.Identity.Name).ToListAsync());
+            return View(await _context.DailyInformtions.Where(j => j.DailyInformtionUser == User.Identity.Name).ToListAsync());
         }
 
         // GET: Journals/Details/5
@@ -59,8 +59,8 @@ namespace MyJournal.Controllers
                 return NotFound();
             }
 
-            var journal = await _context.Journals
-                .SingleOrDefaultAsync(m => m.JournalID == id);
+            var journal = await _context.DailyInformtions
+                .SingleOrDefaultAsync(m => m.DailyInformtionID == id);
             if (journal == null)
             {
                 return NotFound();
@@ -86,17 +86,17 @@ namespace MyJournal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("JournalID,JournalText")] Journal journal)
+        public async Task<IActionResult> Create([Bind("JournalID,JournalText")] DailyInformtion dailyInformtion)
         {
             if (ModelState.IsValid)
             {
-                journal.JournalUser = User.Identity.Name;
-                journal.JournalDateTime = DateTime.Now;
-                _context.Add(journal);
+                dailyInformtion.DailyInformtionUser = User.Identity.Name;
+                dailyInformtion.DailyInformtionDateTime = DateTime.Now;
+                _context.Add(dailyInformtion);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(journal);
+            return View(dailyInformtion);
         }
 
         // GET: Journals/Edit/5
@@ -107,7 +107,7 @@ namespace MyJournal.Controllers
                 return NotFound();
             }
             
-            var journal = await _context.Journals.SingleOrDefaultAsync(m => m.JournalID == id);
+            var journal = await _context.DailyInformtions.SingleOrDefaultAsync(m => m.DailyInformtionID == id);
             if (journal == null)
             {
                 return NotFound();
@@ -118,9 +118,9 @@ namespace MyJournal.Controllers
                 return NotFound();
             }
 
-            if ((DateTime.Now - journal.JournalDateTime).TotalMinutes > 60)
+            if ((DateTime.Now - journal.DailyInformtionDateTime).TotalMinutes > 60)
             {
-                return RedirectToAction("Details", new { id = journal.JournalID });
+                return RedirectToAction("Details", new { id = journal.DailyInformtionUser });
             }
 
             return View(journal);
@@ -131,9 +131,9 @@ namespace MyJournal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("JournalID,JournalText")] Journal journal)
+        public async Task<IActionResult> Edit(int id, [Bind("JournalID,JournalText")] DailyInformtion dailyInformtion)
         {
-            if (id != journal.JournalID)
+            if (id != dailyInformtion.DailyInformtionID)
             {
                 return NotFound();
             }
@@ -142,12 +142,12 @@ namespace MyJournal.Controllers
             {
                 try
                 {
-                    _context.Update(journal);
+                    _context.Update(dailyInformtion);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!JournalExists(journal.JournalID))
+                    if (!JournalExists(dailyInformtion.DailyInformtionID))
                     {
                         return NotFound();
                     }
@@ -158,7 +158,7 @@ namespace MyJournal.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(journal);
+            return View(dailyInformtion);
         }
 
         // GET: Journals/Delete/5
@@ -169,8 +169,8 @@ namespace MyJournal.Controllers
                 return NotFound();
             }
 
-            var journal = await _context.Journals
-                .SingleOrDefaultAsync(m => m.JournalID == id);
+            var journal = await _context.DailyInformtions
+                .SingleOrDefaultAsync(m => m.DailyInformtionID == id);
             if (journal == null)
             {
                 return NotFound();
@@ -189,15 +189,15 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var journal = await _context.Journals.SingleOrDefaultAsync(m => m.JournalID == id);
-            _context.Journals.Remove(journal);
+            var journal = await _context.DailyInformtions.SingleOrDefaultAsync(m => m.DailyInformtionID == id);
+            _context.DailyInformtions.Remove(journal);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool JournalExists(int id)
         {
-            return _context.Journals.Any(e => e.JournalID == id);
+            return _context.DailyInformtions.Any(e => e.DailyInformtionID == id);
         }
     }
 }

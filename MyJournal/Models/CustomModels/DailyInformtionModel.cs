@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace MyJournal.Models.JournalModels
+namespace MyJournal.Models.CustomModels
 {
     //public class JournalContext : DbContext
     //{
@@ -18,18 +18,19 @@ namespace MyJournal.Models.JournalModels
     //    public DbSet<Journal> Journals { get; set; }
     //}
        
-    public class Journal
+    public class DailyInformtion
     {
-        public int JournalID { get; set; }
+        [Key]
+        public int DailyInformtionID { get; set; }
 
         [Required]
         public string JournalText {get;set;}
 
         [DataType(DataType.DateTime)]
         [HiddenInput]
-        public DateTime JournalDateTime { get; set; }
+        public DateTime DailyInformtionDateTime { get; set; }
 
-        public string JournalUser { get; set; }
+        public string DailyInformtionUser { get; set; }
 
         [Required]
         public int mood { get; set; }

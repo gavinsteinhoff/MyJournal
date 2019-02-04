@@ -10,7 +10,7 @@ using System;
 
 namespace MyJournal.Migrations
 {
-    [DbContext(typeof(JournalContext))]
+    [DbContext(typeof(MyJournalContext))]
     partial class JournalContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -20,23 +20,23 @@ namespace MyJournal.Migrations
                 .HasAnnotation("ProductVersion", "2.0.3-rtm-10026")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("MyJournal.Models.JournalModels.Journal", b =>
+            modelBuilder.Entity("MyJournal.Models.CustomModels.DailyInformtion", b =>
                 {
-                    b.Property<int>("JournalID")
+                    b.Property<int>("DailyInformtionID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("JournalDateTime");
+                    b.Property<DateTime>("DailyInformtionDateTime");
+
+                    b.Property<string>("DailyInformtionUser");
 
                     b.Property<string>("JournalText")
                         .IsRequired();
 
-                    b.Property<string>("JournalUser");
-
                     b.Property<int>("mood");
 
-                    b.HasKey("JournalID");
+                    b.HasKey("DailyInformtionID");
 
-                    b.ToTable("Journals");
+                    b.ToTable("DailyInformtions");
                 });
 #pragma warning restore 612, 618
         }
