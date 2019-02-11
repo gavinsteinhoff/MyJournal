@@ -26,6 +26,7 @@ My Journal is a website designed for daily journaling online along with statisti
 - 2-Step Authentication
 - Database Server
 - Journal Templates
+- Webserver
 
 ## Stats to Collect
 - User Submited
