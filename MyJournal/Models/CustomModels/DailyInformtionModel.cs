@@ -31,12 +31,25 @@ namespace MyJournal.Models.CustomModels
 
         [DataType(DataType.DateTime)]
         [HiddenInput]
-        public DateTime DailyInformtionDateTime { get; set; }
+        public DateTime DailyInformationDateTime { get; set; }
 
         [HiddenInput]
-        public string DailyInformtionUser { get; set; }
+        public string User { get; set; }
 
         [Required]
         public int UserMood { get; set; }
+
+        [HiddenInput]
+        public int GeneratedMood { get; set; }
+
+        [Required]
+        [Display(Name = "Minutes Working Out")]
+        public int MinWorkedOut { get; set; }
+
+        [Required]
+        [Display(Name ="Hours of Sleep")]
+        public int HoursSlept { get; set; }
+
+
     }
 }

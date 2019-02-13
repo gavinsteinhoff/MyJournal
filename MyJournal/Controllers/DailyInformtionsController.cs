@@ -54,7 +54,7 @@ namespace MyJournal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DailyInformtionID,Title,JournalText,DailyInformtionDateTime,DailyInformtionUser,UserMood")] DailyInformtion dailyInformtion)
+        public async Task<IActionResult> Create([Bind("DailyInformtionID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinWorkedOut,HoursSlept")] DailyInformtion dailyInformtion)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace MyJournal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DailyInformtionID,Title,JournalText,DailyInformtionDateTime,DailyInformtionUser,UserMood")] DailyInformtion dailyInformtion)
+        public async Task<IActionResult> Edit(int id, [Bind("DailyInformtionID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinWorkedOut,HoursSlept")] DailyInformtion dailyInformtion)
         {
             if (id != dailyInformtion.DailyInformtionID)
             {

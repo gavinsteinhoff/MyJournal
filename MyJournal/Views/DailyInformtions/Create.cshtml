@@ -4,18 +4,6 @@
     ViewData["Title"] = "Create";
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 <h2>Create</h2>
 
 <h4>DailyInformtion</h4>
@@ -30,14 +18,33 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
+
+                <select id="template">
+                    <option value="Blank">Blank</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                </select>
                 <label asp-for="JournalText" class="control-label"></label>
-                <input asp-for="JournalText" class="form-control" />
+                <textarea asp-for="JournalText" class="form-control"></textarea>
                 <span asp-validation-for="JournalText" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="UserMood" class="control-label"></label>
                 <input asp-for="UserMood" class="form-control" />
                 <span asp-validation-for="UserMood" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MinWorkedOut" class="control-label"></label>
+                <input asp-for="MinWorkedOut" class="form-control" />
+                <span asp-validation-for="MinWorkedOut" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HoursSlept" class="control-label"></label>
+                <input asp-for="HoursSlept" class="form-control" />
+                <span asp-validation-for="HoursSlept" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -52,4 +59,25 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            $("select#template").change(function () {
+                var template = $(this).children("option:selected").val();
+                switch (template) {
+                    case "A":
+                        $('#JournalText').val('What did I achieve today? \n\n\nWhat lessons did I learn today?\n\n\nWhat am I thankful for right now?\n\n\nHow am I feeling right now?\n\n\nWhat did I read today?\n\n\nWhat are three amazing things that happened today?\n\n\nHow could I have made today better?');
+                        break;
+                    case "B":
+                        $('#JournalText').val('b\n\n\nnewline');
+                        break;
+                    case "C":
+                        $('#JournalText').val('c\n\n\nnewline');
+                        break;
+                    case "Blank":
+                        $('#JournalText').val('');
+                        break;
+                }
+            });
+        });
+    </script>
 }
