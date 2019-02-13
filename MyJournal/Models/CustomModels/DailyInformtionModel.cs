@@ -18,10 +18,10 @@ namespace MyJournal.Models.CustomModels
     //    public DbSet<Journal> Journals { get; set; }
     //}
        
-    public class DailyInformtion
+    public class DailyInformation
     {
         [Key]
-        public int DailyInformtionID { get; set; }
+        public int DailyInformationID { get; set; }
 
         [Required]
         public string Title { get; set; }

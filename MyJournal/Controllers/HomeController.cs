@@ -14,7 +14,7 @@ namespace MyJournal.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "journals", new { area = "" });
+                return RedirectToAction("Index", "DailyInformations", new { area = "" });
             }
             return View();
         }

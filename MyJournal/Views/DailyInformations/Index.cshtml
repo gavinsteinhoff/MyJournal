@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MyJournal.Models.CustomModels.DailyInformtion>
+﻿@model IEnumerable<MyJournal.Models.CustomModels.DailyInformation>
 
 @{
     ViewData["Title"] = "Index";
@@ -67,9 +67,9 @@
                 @Html.DisplayFor(modelItem => item.HoursSlept)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.DailyInformtionID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.DailyInformtionID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.DailyInformtionID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.DailyInformationID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.DailyInformationID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.DailyInformationID">Delete</a>
             </td>
         </tr>
 }

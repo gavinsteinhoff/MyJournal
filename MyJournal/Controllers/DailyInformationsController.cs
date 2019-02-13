@@ -10,11 +10,11 @@ using MyJournal.Models.CustomModels;
 
 namespace MyJournal.Controllers
 {
-    public class DailyInformtionsController : Controller
+    public class DailyInformationsController : Controller
     {
         private readonly MyJournalContext _context;
 
-        public DailyInformtionsController(MyJournalContext context)
+        public DailyInformationsController(MyJournalContext context)
         {
             _context = context;
         }
@@ -22,7 +22,7 @@ namespace MyJournal.Controllers
         // GET: DailyInformtions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.DailyInformtions.ToListAsync());
+            return View(await _context.DailyInformations.ToListAsync());
         }
 
         // GET: DailyInformtions/Details/5
@@ -33,8 +33,8 @@ namespace MyJournal.Controllers
                 return NotFound();
             }
 
-            var dailyInformtion = await _context.DailyInformtions
-                .SingleOrDefaultAsync(m => m.DailyInformtionID == id);
+            var dailyInformtion = await _context.DailyInformations
+                .SingleOrDefaultAsync(m => m.DailyInformationID == id);
             if (dailyInformtion == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace MyJournal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DailyInformtionID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinWorkedOut,HoursSlept")] DailyInformtion dailyInformtion)
+        public async Task<IActionResult> Create([Bind("DailyInformtionID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinWorkedOut,HoursSlept")] DailyInformation dailyInformtion)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +73,7 @@ namespace MyJournal.Controllers
                 return NotFound();
             }
 
-            var dailyInformtion = await _context.DailyInformtions.SingleOrDefaultAsync(m => m.DailyInformtionID == id);
+            var dailyInformtion = await _context.DailyInformations.SingleOrDefaultAsync(m => m.DailyInformationID == id);
             if (dailyInformtion == null)
             {
                 return NotFound();
@@ -86,9 +86,9 @@ namespace MyJournal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DailyInformtionID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinWorkedOut,HoursSlept")] DailyInformtion dailyInformtion)
+        public async Task<IActionResult> Edit(int id, [Bind("DailyInformtionID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinWorkedOut,HoursSlept")] DailyInformation dailyInformtion)
         {
-            if (id != dailyInformtion.DailyInformtionID)
+            if (id != dailyInformtion.DailyInformationID)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace MyJournal.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DailyInformtionExists(dailyInformtion.DailyInformtionID))
+                    if (!DailyInformtionExists(dailyInformtion.DailyInformationID))
                     {
                         return NotFound();
                     }
@@ -124,8 +124,8 @@ namespace MyJournal.Controllers
                 return NotFound();
             }
 
-            var dailyInformtion = await _context.DailyInformtions
-                .SingleOrDefaultAsync(m => m.DailyInformtionID == id);
+            var dailyInformtion = await _context.DailyInformations
+                .SingleOrDefaultAsync(m => m.DailyInformationID == id);
             if (dailyInformtion == null)
             {
                 return NotFound();
@@ -139,15 +139,15 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var dailyInformtion = await _context.DailyInformtions.SingleOrDefaultAsync(m => m.DailyInformtionID == id);
-            _context.DailyInformtions.Remove(dailyInformtion);
+            var dailyInformtion = await _context.DailyInformations.SingleOrDefaultAsync(m => m.DailyInformationID == id);
+            _context.DailyInformations.Remove(dailyInformtion);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool DailyInformtionExists(int id)
         {
-            return _context.DailyInformtions.Any(e => e.DailyInformtionID == id);
+            return _context.DailyInformations.Any(e => e.DailyInformationID == id);
         }
     }
 }

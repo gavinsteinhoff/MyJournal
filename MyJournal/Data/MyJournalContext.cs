@@ -14,6 +14,6 @@ namespace MyJournal.Data
         public MyJournalContext(DbContextOptions<MyJournalContext> options) : base(options)
         { }
 
-        public DbSet<DailyInformtion> DailyInformtions { get; set; }
+        public DbSet<DailyInformation> DailyInformations { get; set; }
     }
 }
