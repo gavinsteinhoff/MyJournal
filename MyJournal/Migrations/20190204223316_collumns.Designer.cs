@@ -11,8 +11,8 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(MyJournalContext))]
-    [Migration("20190204184503_addedMood")]
-    partial class addedMood
+    [Migration("20190204223316_collumns")]
+    partial class collumns
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,23 +21,26 @@ namespace MyJournal.Migrations
                 .HasAnnotation("ProductVersion", "2.0.3-rtm-10026")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("MyJournal.Models.JournalModels.Journal", b =>
+            modelBuilder.Entity("MyJournal.Models.CustomModels.DailyInformtion", b =>
                 {
-                    b.Property<int>("JournalID")
+                    b.Property<int>("DailyInformtionID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("JournalDateTime");
+                    b.Property<DateTime>("DailyInformtionDateTime");
+
+                    b.Property<string>("DailyInformtionUser");
 
                     b.Property<string>("JournalText")
                         .IsRequired();
 
-                    b.Property<string>("JournalUser");
+                    b.Property<string>("Title")
+                        .IsRequired();
 
-                    b.Property<int>("mood");
+                    b.Property<int>("UserMood");
 
-                    b.HasKey("JournalID");
+                    b.HasKey("DailyInformtionID");
 
-                    b.ToTable("Journals");
+                    b.ToTable("DailyInformtions");
                 });
 #pragma warning restore 612, 618
         }

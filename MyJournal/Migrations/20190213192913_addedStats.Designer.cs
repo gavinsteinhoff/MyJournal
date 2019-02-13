@@ -11,8 +11,8 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(MyJournalContext))]
-    [Migration("20190204184503_addedMood")]
-    partial class addedMood
+    [Migration("20190213192913_addedStats")]
+    partial class addedStats
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,23 +21,32 @@ namespace MyJournal.Migrations
                 .HasAnnotation("ProductVersion", "2.0.3-rtm-10026")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("MyJournal.Models.JournalModels.Journal", b =>
+            modelBuilder.Entity("MyJournal.Models.CustomModels.DailyInformtion", b =>
                 {
-                    b.Property<int>("JournalID")
+                    b.Property<int>("DailyInformtionID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("JournalDateTime");
+                    b.Property<DateTime>("DailyInformationDateTime");
+
+                    b.Property<int>("GeneratedMood");
+
+                    b.Property<int>("HoursSlept");
 
                     b.Property<string>("JournalText")
                         .IsRequired();
 
-                    b.Property<string>("JournalUser");
+                    b.Property<int>("MinWorkedOut");
 
-                    b.Property<int>("mood");
+                    b.Property<string>("Title")
+                        .IsRequired();
 
-                    b.HasKey("JournalID");
+                    b.Property<string>("User");
 
-                    b.ToTable("Journals");
+                    b.Property<int>("UserMood");
+
+                    b.HasKey("DailyInformtionID");
+
+                    b.ToTable("DailyInformtions");
                 });
 #pragma warning restore 612, 618
         }

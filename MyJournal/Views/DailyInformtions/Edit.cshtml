@@ -1,0 +1,69 @@
+﻿@model MyJournal.Models.CustomModels.DailyInformtion
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>DailyInformtion</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="DailyInformtionID" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JournalText" class="control-label"></label>
+                <input asp-for="JournalText" class="form-control" />
+                <span asp-validation-for="JournalText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DailyInformationDateTime" class="control-label"></label>
+                <input asp-for="DailyInformationDateTime" class="form-control" />
+                <span asp-validation-for="DailyInformationDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User" class="control-label"></label>
+                <input asp-for="User" class="form-control" />
+                <span asp-validation-for="User" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserMood" class="control-label"></label>
+                <input asp-for="UserMood" class="form-control" />
+                <span asp-validation-for="UserMood" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GeneratedMood" class="control-label"></label>
+                <input asp-for="GeneratedMood" class="form-control" />
+                <span asp-validation-for="GeneratedMood" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinWorkedOut" class="control-label"></label>
+                <input asp-for="MinWorkedOut" class="form-control" />
+                <span asp-validation-for="MinWorkedOut" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HoursSlept" class="control-label"></label>
+                <input asp-for="HoursSlept" class="form-control" />
+                <span asp-validation-for="HoursSlept" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MyJournal.Data;
 using MyJournal.Models;
 using MyJournal.Services;
-using MyJournal.Models.JournalModels;
+using MyJournal.Models.CustomModels;
 
 namespace MyJournal
 {
@@ -34,7 +34,7 @@ namespace MyJournal
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddDbContext<JournalContext>(options =>
+            services.AddDbContext<MyJournalContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Add application services.

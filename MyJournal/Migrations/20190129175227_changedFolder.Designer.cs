@@ -10,7 +10,7 @@ using System;
 
 namespace MyJournal.Migrations
 {
-    [DbContext(typeof(JournalContext))]
+    [DbContext(typeof(MyJournalContext))]
     [Migration("20190129175227_changedFolder")]
     partial class changedFolder
     {
