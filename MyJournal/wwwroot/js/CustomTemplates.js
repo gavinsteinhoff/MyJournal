@@ -12,16 +12,17 @@ $(document).ready(function () {
     //This waits for all the scripts to load then add an option html elemtent to the select element for each one
     setTimeout(function () {
         for (let i = 0; i < templates.length; ++i) {
-            select.append(`<option value='${i + 1}'>Template ${i + 1}</option>`);
+            select.append(`<option value='${i}'>${templates[i].name}</option>`);
         }
+        select.removeAttr("hidden");
     }, 500);
 
     $("select#template").change(function () {
         var template = $(this).children("option:selected").val();
         //detects a selected option then loops through till it finds the matching one
         for (let i = 0; i < templates.length; ++i) {
-            if (template == i + 1) {
-                $('#JournalText').val(templates[i]);
+            if (template == i) {
+                $('#JournalText').val(templates[i].text);
             }
         }
     });

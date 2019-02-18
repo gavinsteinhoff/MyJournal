@@ -1,3 +1,7 @@
 ﻿templates.push(
-    `b`
+    {
+        text:
+            `b`,
+        name: 'template b'
+    }
 )
