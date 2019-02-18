@@ -1,5 +1,5 @@
-﻿let templateA = 
-`What did I achieve today ?
+﻿templates.push(
+    `What did I achieve today ?
 
 What lessons did I learn today ?
 
@@ -12,3 +12,4 @@ What did I read today ?
 What are three amazing things that happened today ?
 
 How could I have made today better ?`
+)
