@@ -14,6 +14,6 @@ What did I read today ?
 What are three amazing things that happened today ?
 
 How could I have made today better ?`,
-        name: 'template a'
+        name: 'template A'
     }
 )
