@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using MyJournal.Models.CustomModels;
 
 namespace MyJournal.Controllers
 {
+    [Authorize]
     public class DailyInformationsController : Controller
     {
         private readonly MyJournalContext _context;
@@ -19,10 +21,35 @@ namespace MyJournal.Controllers
             _context = context;
         }
 
+
+        // Custom Methods
+
+        /// <summary>
+        /// Checks to see if the current user owns a journal.
+        /// Doesn't check to see if journal exist
+        /// </summary>
+        /// <param name="journal">
+        /// A journal object from the JournalContext
+        /// </param>
+        /// <returns>
+        /// Returns true if the user owns the journal, false if not
+        /// </returns>
+        private bool AuthJournal(DailyInformation dailyInformation)
+        {
+            if (dailyInformation.User == User.Identity.Name)
+            {
+                return true;
+            }
+            return false;
+        }
+        //End Custom
+
+
+
         // GET: DailyInformtions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.DailyInformations.ToListAsync());
+            return View(await _context.DailyInformations.Where(x=> x.User == User.Identity.Name).ToListAsync());
         }
 
         // GET: DailyInformtions/Details/5
@@ -35,7 +62,8 @@ namespace MyJournal.Controllers
 
             var dailyInformtion = await _context.DailyInformations
                 .SingleOrDefaultAsync(m => m.DailyInformationID == id);
-            if (dailyInformtion == null)
+
+            if (dailyInformtion == null || !AuthJournal(dailyInformtion))
             {
                 return NotFound();
             }
@@ -58,6 +86,8 @@ namespace MyJournal.Controllers
         {
             if (ModelState.IsValid)
             {
+                dailyInformtion.User = User.Identity.Name;
+                dailyInformtion.DailyInformationDateTime = DateTime.Now;
                 _context.Add(dailyInformtion);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -74,7 +104,8 @@ namespace MyJournal.Controllers
             }
 
             var dailyInformtion = await _context.DailyInformations.SingleOrDefaultAsync(m => m.DailyInformationID == id);
-            if (dailyInformtion == null)
+
+            if (dailyInformtion == null || !AuthJournal(dailyInformtion))
             {
                 return NotFound();
             }
@@ -88,7 +119,7 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DailyInformtionID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinWorkedOut,HoursSlept")] DailyInformation dailyInformtion)
         {
-            if (id != dailyInformtion.DailyInformationID)
+            if (id != dailyInformtion.DailyInformationID || !AuthJournal(dailyInformtion))
             {
                 return NotFound();
             }
@@ -126,7 +157,7 @@ namespace MyJournal.Controllers
 
             var dailyInformtion = await _context.DailyInformations
                 .SingleOrDefaultAsync(m => m.DailyInformationID == id);
-            if (dailyInformtion == null)
+            if (dailyInformtion == null || !AuthJournal(dailyInformtion))
             {
                 return NotFound();
             }
