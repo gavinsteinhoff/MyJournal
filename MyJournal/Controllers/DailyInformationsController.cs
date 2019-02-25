@@ -49,7 +49,7 @@ namespace MyJournal.Controllers
         // GET: DailyInformtions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.DailyInformations.Where(x=> x.User == User.Identity.Name).ToListAsync());
+            return View(await _context.DailyInformations.Where(x=> x.User == User.Identity.Name).OrderBy(x=> x.DailyInformationDateTime).ToListAsync());
         }
 
         // GET: DailyInformtions/Details/5

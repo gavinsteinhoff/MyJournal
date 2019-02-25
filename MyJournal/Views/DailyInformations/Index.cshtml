@@ -3,6 +3,10 @@
 @{
     ViewData["Title"] = "Index";
     int daysWithGoodMood = 0;
+    int daysInARow = 0;
+    DateTime lastDate = Model.FirstOrDefault().DailyInformationDateTime;
+    List<int> myData = new List<int>();
+    List<string> myLabel = new List<string>();
 }
 
 
@@ -15,10 +19,24 @@
             </a>
             <br />
 
+            TimeSpan diff = item.DailyInformationDateTime - lastDate;
+
+            if (diff.Days == 1)
+            {
+                daysInARow++;
+            } else
+            {
+                daysInARow = 0;
+            }
+
+            lastDate = item.DailyInformationDateTime;
+
             if (item.UserMood > 2)
             {
                 daysWithGoodMood++;
             }
+            myData.Add(item.UserMood);
+            myLabel.Add(item.DailyInformationDateTime.ToString("MM/dd/yy"));
         }
 
     </div>
@@ -56,6 +74,13 @@
                 </div>
                 Average Hours of Sleep a Day
             </div>
+
+            <div class="stat-holder">
+                <div class="stat">
+                    @daysInARow
+                </div>
+                Days in a Row
+            </div>
         </div>
 
     </div>
@@ -68,15 +93,6 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script>
-        @{
-            List<int> myData = new List<int>();
-            List<string> myLabel = new List<string>();
-        }
-        @foreach (var item in Model)
-        {
-            myData.Add(item.UserMood);
-            myLabel.Add(item.DailyInformationDateTime.ToString("MM/dd/yy"));
-        }
         @{
             string myJSONData = Newtonsoft.Json.JsonConvert.SerializeObject(myData);
             string myJSONLabel = Newtonsoft.Json.JsonConvert.SerializeObject(myLabel);
