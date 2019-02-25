@@ -5,8 +5,10 @@
     int daysWithGoodMood = 0;
     int daysInARow = 0;
     DateTime lastDate = Model.FirstOrDefault().DailyInformationDateTime;
-    List<int> myData = new List<int>();
-    List<string> myLabel = new List<string>();
+    List<int> moodData = new List<int>();
+    List<string> dataLabel = new List<string>();
+    List<int> workOutData = new List<int>();
+    List<int> sleepData = new List<int>();
 }
 
 
@@ -24,7 +26,8 @@
             if (diff.Days == 1)
             {
                 daysInARow++;
-            } else
+            }
+            else
             {
                 daysInARow = 0;
             }
@@ -35,8 +38,12 @@
             {
                 daysWithGoodMood++;
             }
-            myData.Add(item.UserMood);
-            myLabel.Add(item.DailyInformationDateTime.ToString("MM/dd/yy"));
+
+            dataLabel.Add(item.DailyInformationDateTime.ToString("MM/dd/yy"));
+
+            moodData.Add(item.UserMood);
+            workOutData.Add(item.MinWorkedOut);
+            sleepData.Add(item.HoursSlept);
         }
 
     </div>
@@ -48,7 +55,7 @@
 
         <div class="stats my-5">
             <div class="stat-holder">
-                <div class="stat">
+                <div class="stat" id="mood">
                     @Math.Round(Model.Average(x => x.UserMood), 1)
                 </div>
                 Average Mood
@@ -62,14 +69,14 @@
             </div>
 
             <div class="stat-holder">
-                <div class="stat">
+                <div class="stat" id="workingOut">
                     @Math.Round(Model.Average(x => x.MinWorkedOut), 0)
                 </div>
                 Average Minutes Working Out a Day
             </div>
 
             <div class="stat-holder">
-                <div class="stat">
+                <div class="stat" id="sleep">
                     @Math.Round(Model.Average(x => x.HoursSlept), 0)
                 </div>
                 Average Hours of Sleep a Day
@@ -94,41 +101,59 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script>
         @{
-            string myJSONData = Newtonsoft.Json.JsonConvert.SerializeObject(myData);
-            string myJSONLabel = Newtonsoft.Json.JsonConvert.SerializeObject(myLabel);
+            string JsonMoodData = Newtonsoft.Json.JsonConvert.SerializeObject(moodData);
+            string JsonWorkOutData = Newtonsoft.Json.JsonConvert.SerializeObject(workOutData);
+            string JsonSleepData = Newtonsoft.Json.JsonConvert.SerializeObject(sleepData);
+            string JsonDateLabel = Newtonsoft.Json.JsonConvert.SerializeObject(dataLabel);
         }
 
-        let myData = @Html.Raw(myJSONData);
-        let myLabels = @Html.Raw(myJSONLabel);
+        $(document).ready(function () {
+            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData),1)
+        });
 
-        new Chart(document.getElementById("myChart"), {
-            type: 'line',
-            data: {
-            labels: myLabels,
-                datasets: [{
-                    borderColor: "#38a9e4",
-                    data: myData,
-                    fill: false,
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        display: true,
-                        ticks: {
-                            suggestedMin: 1,
-                            stepSize: 1
-                        }
+        $("#mood").click(function () {
+            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData),1)
+        });
+
+        $("#workingOut").click(function () {
+            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonWorkOutData),15);
+        });
+
+        $("#sleep").click(function () {
+            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonSleepData),1);
+        });
+
+
+        function createChart(chartName,labels,data,yStep) {
+            new Chart(document.getElementById(chartName), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        borderColor: "#38a9e4",
+                        data: data,
+                        fill: false,
                     }]
                 },
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Daily Mood'
+                options: {
+                    scales: {
+                        yAxes: [{
+                            display: true,
+                            ticks: {
+                                suggestedMin: 4,
+                                stepSize: yStep
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Daily Stats'
+                    }
                 }
-            }
-        });
+            });
+        }
     </script>
 }
