@@ -2,76 +2,133 @@
 
 @{
     ViewData["Title"] = "Index";
+    int daysWithGoodMood = 0;
+    int daysInARow = 0;
+    DateTime lastDate = Model.FirstOrDefault().DailyInformationDateTime;
+    List<int> myData = new List<int>();
+    List<string> myLabel = new List<string>();
 }
 
-<h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.JournalText)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DailyInformationDateTime)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.User)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UserMood)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.GeneratedMood)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MinWorkedOut)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.HoursSlept)
-                </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JournalText)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DailyInformationDateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserMood)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GeneratedMood)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MinWorkedOut)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HoursSlept)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.DailyInformationID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.DailyInformationID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.DailyInformationID">Delete</a>
-            </td>
-        </tr>
+<div class="row">
+    <div class="col bg-dark border-top border-light text-light py-3 sideMenuLink">
+        @foreach (var item in Model)
+        {
+            <a asp-action="Details" asp-route-id="@item.DailyInformationID">
+                @item.DailyInformationDateTime.ToString("MM/dd/yy") - @Html.DisplayFor(modelItem => item.Title)
+            </a>
+            <br />
+
+            TimeSpan diff = item.DailyInformationDateTime - lastDate;
+
+            if (diff.Days == 1)
+            {
+                daysInARow++;
+            } else
+            {
+                daysInARow = 0;
+            }
+
+            lastDate = item.DailyInformationDateTime;
+
+            if (item.UserMood > 2)
+            {
+                daysWithGoodMood++;
+            }
+            myData.Add(item.UserMood);
+            myLabel.Add(item.DailyInformationDateTime.ToString("MM/dd/yy"));
+        }
+
+    </div>
+    <div class="col-12 col-md-10 py-2">
+
+        <a asp-action="Create">Create New</a>
+
+        <canvas id="myChart" height="100"></canvas>
+
+        <div class="stats my-5">
+            <div class="stat-holder">
+                <div class="stat">
+                    @Math.Round(Model.Average(x => x.UserMood), 1)
+                </div>
+                Average Mood
+            </div>
+
+            <div class="stat-holder">
+                <div class="stat">
+                    @daysWithGoodMood
+                </div>
+                Days With Good Mood
+            </div>
+
+            <div class="stat-holder">
+                <div class="stat">
+                    @Math.Round(Model.Average(x => x.MinWorkedOut), 0)
+                </div>
+                Average Minutes Working Out a Day
+            </div>
+
+            <div class="stat-holder">
+                <div class="stat">
+                    @Math.Round(Model.Average(x => x.HoursSlept), 0)
+                </div>
+                Average Hours of Sleep a Day
+            </div>
+
+            <div class="stat-holder">
+                <div class="stat">
+                    @daysInARow
+                </div>
+                Days in a Row
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script>
+        @{
+            string myJSONData = Newtonsoft.Json.JsonConvert.SerializeObject(myData);
+            string myJSONLabel = Newtonsoft.Json.JsonConvert.SerializeObject(myLabel);
+        }
+
+        let myData = @Html.Raw(myJSONData);
+        let myLabels = @Html.Raw(myJSONLabel);
+
+        new Chart(document.getElementById("myChart"), {
+            type: 'line',
+            data: {
+            labels: myLabels,
+                datasets: [{
+                    borderColor: "#38a9e4",
+                    data: myData,
+                    fill: false,
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMin: 1,
+                            stepSize: 1
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Daily Mood'
+                }
+            }
+        });
+    </script>
 }
-    </tbody>
-</table>
