@@ -9,6 +9,12 @@
     List<string> dataLabel = new List<string>();
     List<int> workOutData = new List<int>();
     List<int> sleepData = new List<int>();
+    List<int> moodCount = new List<int>();
+    moodCount.Add(Model.Count(x => x.UserMood == 1));
+    moodCount.Add(Model.Count(x => x.UserMood == 2));
+    moodCount.Add(Model.Count(x => x.UserMood == 3));
+    moodCount.Add(Model.Count(x => x.UserMood == 4));
+    moodCount.Add(Model.Count(x => x.UserMood == 5));
 }
 
 
@@ -62,7 +68,7 @@
             </div>
 
             <div class="stat-holder">
-                <div class="stat">
+                <div class="stat" id="overalMood">
                     @daysWithGoodMood
                 </div>
                 Days With Good Mood
@@ -77,7 +83,7 @@
 
             <div class="stat-holder">
                 <div class="stat" id="sleep">
-                    @Math.Round(Model.Average(x => x.HoursSlept), 0)
+                    @Math.Round(Model.Average(x => x.HoursSlept), 1)
                 </div>
                 Average Hours of Sleep a Day
             </div>
@@ -104,36 +110,68 @@
             string JsonMoodData = Newtonsoft.Json.JsonConvert.SerializeObject(moodData);
             string JsonWorkOutData = Newtonsoft.Json.JsonConvert.SerializeObject(workOutData);
             string JsonSleepData = Newtonsoft.Json.JsonConvert.SerializeObject(sleepData);
+            string JsonMoodCount = Newtonsoft.Json.JsonConvert.SerializeObject(moodCount);
+
             string JsonDateLabel = Newtonsoft.Json.JsonConvert.SerializeObject(dataLabel);
         }
+
+        let count = @Html.Raw(JsonMoodData.Count());
 
         $(document).ready(function () {
             createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData),1)
         });
-
+        
         $("#mood").click(function () {
-            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData),1)
+            let average = [];
+            for (let i = 0; i < count; i++) {
+                average.push(@Html.Raw(moodData.Average()));
+            }
+            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData), 1,average)
+        });
+
+        $("#overalMood").click(function () {
+            createDoughnutChart("myChart", ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(JsonMoodCount));
         });
 
         $("#workingOut").click(function () {
-            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonWorkOutData),15);
+            let average = [];
+            for (let i = 0; i < count; i++) {
+                average.push(@Html.Raw(workOutData.Average()));
+            }
+            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonWorkOutData),15,average);
         });
 
         $("#sleep").click(function () {
-            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonSleepData),1);
+            let average = [];
+            for (let i = 0; i < count; i++) {
+                average.push(@Html.Raw(sleepData.Average()));
+            }
+            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonSleepData),1,average);
         });
 
+        let chart;
 
-        function createChart(chartName,labels,data,yStep) {
-            new Chart(document.getElementById(chartName), {
+        function createChart(chartName, labels, data, yStep, average) {
+            if (chart)
+            {
+                chart.destroy();
+            }
+            chart = new Chart(document.getElementById(chartName), {
                 type: 'line',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        borderColor: "#38a9e4",
-                        data: data,
-                        fill: false,
-                    }]
+                    datasets: [
+                        {
+                            borderColor: "#38a9e4",
+                            data: data,
+                            fill: false
+                        },
+                        {
+                            borderColor: "#fff000",
+                            data: average,
+                            fill: false
+                        }
+                    ]
                 },
                 options: {
                     scales: {
@@ -155,5 +193,34 @@
                 }
             });
         }
+
+        function createDoughnutChart(chartName, labels, data) {
+            chart.destroy();
+            chart = new Chart(document.getElementById(chartName), {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        borderColor: "#000000",
+                        data: data,
+                        backgroundColor: [
+                            "#ff0000",
+                            "#ff7b00",
+                            "#ffff00",
+                            "#8cff00",
+                            "#13a520",
+                        ],
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Daily Stats'
+                    }
+                }
+            });
+        }
+
+
     </script>
 }
