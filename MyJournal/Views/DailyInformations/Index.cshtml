@@ -118,9 +118,13 @@
         let count = @Html.Raw(JsonMoodData.Count());
 
         $(document).ready(function () {
-            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData),1)
+            let average = [];
+            for (let i = 0; i < count; i++) {
+                average.push(@Html.Raw(moodData.Average()));
+            }
+            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData), 1,average)
         });
-        
+
         $("#mood").click(function () {
             let average = [];
             for (let i = 0; i < count; i++) {
