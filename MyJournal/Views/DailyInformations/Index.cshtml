@@ -4,7 +4,20 @@
     ViewData["Title"] = "Index";
     int daysWithGoodMood = 0;
     int daysInARow = 0;
-    DateTime lastDate = Model.FirstOrDefault().DailyInformationDateTime;
+    double moodAverage = 0;
+    double workoutAverage = 0;
+    double sleepAverage = 0;
+    DateTime lastDate = DateTime.Now;
+
+    if (Model.Count() != 0)
+    {
+        moodAverage = Math.Round(Model.Average(x => x.UserMood), 1);
+        workoutAverage = Math.Round(Model.Average(x => x.MinWorkedOut), 0);
+        sleepAverage = Math.Round(Model.Average(x => x.HoursSlept), 1);
+        
+        lastDate = Model.FirstOrDefault().DailyInformationDateTime;
+    }
+
     List<int> moodData = new List<int>();
     List<string> dataLabel = new List<string>();
     List<int> workOutData = new List<int>();
@@ -55,14 +68,14 @@
     </div>
     <div class="col-12 col-md-10 py-2">
 
-        <a asp-action="Create">Create New</a>
-
+        <a class="btn btn-primary mb-5" asp-action="Create">Create New</a>
+        <div class="alert alert-danger" role="alert" id="error" hidden></div>
         <canvas id="myChart" height="100"></canvas>
 
         <div class="stats my-5">
             <div class="stat-holder">
                 <div class="stat" id="mood">
-                    @Math.Round(Model.Average(x => x.UserMood), 1)
+                    @moodAverage
                 </div>
                 Average Mood
             </div>
@@ -76,14 +89,14 @@
 
             <div class="stat-holder">
                 <div class="stat" id="workingOut">
-                    @Math.Round(Model.Average(x => x.MinWorkedOut), 0)
+                    @workoutAverage
                 </div>
                 Average Minutes Working Out a Day
             </div>
 
             <div class="stat-holder">
                 <div class="stat" id="sleep">
-                    @Math.Round(Model.Average(x => x.HoursSlept), 1)
+                    @sleepAverage
                 </div>
                 Average Hours of Sleep a Day
             </div>
@@ -111,120 +124,97 @@
             string JsonWorkOutData = Newtonsoft.Json.JsonConvert.SerializeObject(workOutData);
             string JsonSleepData = Newtonsoft.Json.JsonConvert.SerializeObject(sleepData);
             string JsonMoodCount = Newtonsoft.Json.JsonConvert.SerializeObject(moodCount);
-
             string JsonDateLabel = Newtonsoft.Json.JsonConvert.SerializeObject(dataLabel);
+        }
+
+        let global = {
+            chartName: "myChart"
         }
 
         let count = @Html.Raw(JsonMoodData.Count());
 
-        $(document).ready(function () {
-            let average = [];
-            for (let i = 0; i < count; i++) {
-                average.push(@Html.Raw(moodData.Average()));
+        function moodGraph() {
+            let options = {
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMin: 1,
+                            stepSize: 1
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Daily Mood'
+                }
             }
-            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData), 1,average)
+            preGraph(1,@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData), options);
+        }
+
+        $(document).ready(function () {
+            moodGraph();
         });
 
         $("#mood").click(function () {
-            let average = [];
-            for (let i = 0; i < count; i++) {
-                average.push(@Html.Raw(moodData.Average()));
-            }
-            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData), 1,average)
+            moodGraph();
         });
 
         $("#overalMood").click(function () {
-            createDoughnutChart("myChart", ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(JsonMoodCount));
+            let options= {
+                title: {
+                    display: true,
+                    text: 'Number of Moods'
+                }
+            }
+            preGraph(2, ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(JsonMoodCount), options);
         });
 
         $("#workingOut").click(function () {
-            let average = [];
-            for (let i = 0; i < count; i++) {
-                average.push(@Html.Raw(workOutData.Average()));
+            let options = {
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMin: 0,
+                            stepSize: 15
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Minutes Working Out a Day'
+                }
             }
-            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonWorkOutData),15,average);
+            preGraph(1,@Html.Raw(JsonDateLabel),@Html.Raw(JsonWorkOutData), options);
         });
 
         $("#sleep").click(function () {
-            let average = [];
-            for (let i = 0; i < count; i++) {
-                average.push(@Html.Raw(sleepData.Average()));
-            }
-            createChart("myChart",@Html.Raw(JsonDateLabel),@Html.Raw(JsonSleepData),1,average);
-        });
-
-        let chart;
-
-        function createChart(chartName, labels, data, yStep, average) {
-            if (chart)
-            {
-                chart.destroy();
-            }
-            chart = new Chart(document.getElementById(chartName), {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            borderColor: "#38a9e4",
-                            data: data,
-                            fill: false
-                        },
-                        {
-                            borderColor: "#fff000",
-                            data: average,
-                            fill: false
-                        }
-                    ]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            display: true,
-                            ticks: {
-                                suggestedMin: 4,
-                                stepSize: yStep
-                            }
-                        }]
-                    },
-                    legend: {
-                        display: false
-                    },
-                    title: {
+            let options = {
+                scales: {
+                    yAxes: [{
                         display: true,
-                        text: 'Daily Stats'
-                    }
-                }
-            });
-        }
-
-        function createDoughnutChart(chartName, labels, data) {
-            chart.destroy();
-            chart = new Chart(document.getElementById(chartName), {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        borderColor: "#000000",
-                        data: data,
-                        backgroundColor: [
-                            "#ff0000",
-                            "#ff7b00",
-                            "#ffff00",
-                            "#8cff00",
-                            "#13a520",
-                        ],
+                        ticks: {
+                            suggestedMin: 0,
+                            stepSize: 1
+                        }
                     }]
                 },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'Daily Stats'
-                    }
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Hours of Sleep a Day'
                 }
-            });
-        }
-
-
+            }
+            preGraph(1,@Html.Raw(JsonDateLabel),@Html.Raw(JsonSleepData),options);
+        });
     </script>
 }
