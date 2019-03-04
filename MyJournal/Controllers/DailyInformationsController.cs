@@ -34,7 +34,7 @@ namespace MyJournal.Controllers
         /// <returns>
         /// Returns true if the user owns the journal, false if not
         /// </returns>
-        private bool AuthJournal(DailyInformation dailyInformation)
+        private bool AuthorizeData(DailyInformation dailyInformation)
         {
             if (dailyInformation.User == User.Identity.Name)
             {
@@ -63,7 +63,7 @@ namespace MyJournal.Controllers
             var dailyInformtion = await _context.DailyInformations
                 .SingleOrDefaultAsync(m => m.DailyInformationID == id);
 
-            if (dailyInformtion == null || !AuthJournal(dailyInformtion))
+            if (dailyInformtion == null || !AuthorizeData(dailyInformtion))
             {
                 return NotFound();
             }
@@ -105,7 +105,7 @@ namespace MyJournal.Controllers
 
             var dailyInformtion = await _context.DailyInformations.SingleOrDefaultAsync(m => m.DailyInformationID == id);
 
-            if (dailyInformtion == null || !AuthJournal(dailyInformtion))
+            if (dailyInformtion == null || !AuthorizeData(dailyInformtion))
             {
                 return NotFound();
             }
@@ -119,7 +119,7 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DailyInformtionID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinWorkedOut,HoursSlept")] DailyInformation dailyInformtion)
         {
-            if (id != dailyInformtion.DailyInformationID || !AuthJournal(dailyInformtion))
+            if (id != dailyInformtion.DailyInformationID || !AuthorizeData(dailyInformtion))
             {
                 return NotFound();
             }
@@ -157,7 +157,7 @@ namespace MyJournal.Controllers
 
             var dailyInformtion = await _context.DailyInformations
                 .SingleOrDefaultAsync(m => m.DailyInformationID == id);
-            if (dailyInformtion == null || !AuthJournal(dailyInformtion))
+            if (dailyInformtion == null || !AuthorizeData(dailyInformtion))
             {
                 return NotFound();
             }
