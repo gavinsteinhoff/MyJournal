@@ -48,7 +48,7 @@
             dataLabel.Add(item.DailyInformationDateTime.ToString("MM/dd/yy"));
 
             moodData.Add(item.UserMood);
-            workOutData.Add(item.MinWorkedOut);
+            workOutData.Add(item.MinExercising);
             sleepData.Add(item.HoursSlept);
         }
 
@@ -76,7 +76,7 @@
 
             <div class="stat-holder">
                 <div class="stat" id="workingOut">
-                    @Math.Round(Model.Average(x => x.MinWorkedOut), 0)
+                    @Math.Round(Model.Average(x => x.MinExercising), 0)
                 </div>
                 Average Minutes Working Out a Day
             </div>

@@ -43,13 +43,44 @@ namespace MyJournal.Models.CustomModels
         public int GeneratedMood { get; set; }
 
         [Required]
-        [Display(Name = "Minutes Working Out")]
-        public int MinWorkedOut { get; set; }
+        [Display(Name = "Minutes Exercising")]
+        public int MinExercising { get; set; }
 
         [Required]
         [Display(Name ="Hours of Sleep")]
         public int HoursSlept { get; set; }
 
+        [Required]
+        [Display(Name = "Time you went to bed")]
+        public int DownTime { get; set; }
+
+        [Required]
+        [Display(Name = "Time you got out of bed")]
+        public int UpTime { get; set; }
+
+        [Required]
+        [Display(Name = "How many minutes did you spend on your phone today?")]
+        public int MinPhone { get; set; }
+
+        [Required]
+        [Display(Name = "How many good things happened today?")]
+        public int NumGoodThings { get; set; }
+
+        [Required]
+        [Display(Name = "How many poor things happened today?")]
+        public int NumPoorThings { get; set; }
+
+        [Required]
+        [Display(Name = "How was your overall day")]
+        public int OverallDay { get; set; }
+
+        [Required]
+        [Display(Name = "How excited are you for tomorrow?")]
+        public int ExcitedForTomorrow { get; set; }
+
+        [Required]
+        [Display(Name = "How many minutes did you spend on a hobby")]
+        public int MinHobby { get; set; }
 
     }
 }
