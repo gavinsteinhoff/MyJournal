@@ -12,7 +12,7 @@
     if (Model.Count() != 0)
     {
         moodAverage = Math.Round(Model.Average(x => x.UserMood), 1);
-        workoutAverage = Math.Round(Model.Average(x => x.MinWorkedOut), 0);
+        workoutAverage = Math.Round(Model.Average(x => x.MinExercising), 0);
         sleepAverage = Math.Round(Model.Average(x => x.HoursSlept), 1);
         
         lastDate = Model.FirstOrDefault().DailyInformationDateTime;
