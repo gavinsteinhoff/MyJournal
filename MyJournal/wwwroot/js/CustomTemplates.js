@@ -20,10 +20,15 @@ $(document).ready(function () {
     $("select#template").change(function () {
         var template = $(this).children("option:selected").val();
         //detects a selected option then loops through till it finds the matching one
+        let found = false;
         for (let i = 0; i < templates.length; ++i) {
             if (template == i) {
                 $('#JournalText').val(templates[i].text);
+                found = true;
             }
+        }
+        if (found != true) {
+            $('#JournalText').val("");
         }
     });
 });
