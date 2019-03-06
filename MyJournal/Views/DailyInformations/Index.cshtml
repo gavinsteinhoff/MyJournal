@@ -2,32 +2,6 @@
 
 @{
     ViewData["Title"] = "Index";
-    int daysWithGoodMood = 0;
-    int daysInARow = 0;
-    double moodAverage = 0;
-    double workoutAverage = 0;
-    double sleepAverage = 0;
-    DateTime lastDate = DateTime.Now;
-
-    if (Model.Count() != 0)
-    {
-        moodAverage = Math.Round(Model.Average(x => x.UserMood), 1);
-        workoutAverage = Math.Round(Model.Average(x => x.MinWorkedOut), 0);
-        sleepAverage = Math.Round(Model.Average(x => x.HoursSlept), 1);
-        
-        lastDate = Model.FirstOrDefault().DailyInformationDateTime;
-    }
-
-    List<int> moodData = new List<int>();
-    List<string> dataLabel = new List<string>();
-    List<int> workOutData = new List<int>();
-    List<int> sleepData = new List<int>();
-    List<int> moodCount = new List<int>();
-    moodCount.Add(Model.Count(x => x.UserMood == 1));
-    moodCount.Add(Model.Count(x => x.UserMood == 2));
-    moodCount.Add(Model.Count(x => x.UserMood == 3));
-    moodCount.Add(Model.Count(x => x.UserMood == 4));
-    moodCount.Add(Model.Count(x => x.UserMood == 5));
 }
 
 
@@ -39,73 +13,49 @@
                 @item.DailyInformationDateTime.ToString("MM/dd/yy") - @Html.DisplayFor(modelItem => item.Title)
             </a>
             <br />
-
-            TimeSpan diff = item.DailyInformationDateTime - lastDate;
-
-            if (diff.Days == 1)
-            {
-                daysInARow++;
-            }
-            else
-            {
-                daysInARow = 0;
-            }
-
-            lastDate = item.DailyInformationDateTime;
-
-            if (item.UserMood > 2)
-            {
-                daysWithGoodMood++;
-            }
-
-            dataLabel.Add(item.DailyInformationDateTime.ToString("MM/dd/yy"));
-
-            moodData.Add(item.UserMood);
-            workOutData.Add(item.MinExercising);
-            sleepData.Add(item.HoursSlept);
         }
 
     </div>
     <div class="col-12 col-md-10 py-2">
 
         <a class="btn btn-primary mb-5" asp-action="Create">Create New</a>
-        <div class="alert alert-danger" role="alert" id="error" hidden></div>
+        <div class="alert alert-danger" role="alert" id="error" @ViewData["hideAlert"]>@ViewData["error"]</div>
         <canvas id="myChart" height="100"></canvas>
 
-        <div class="stats my-5">
+        <div class="stats my-5" @ViewData["hidden"]>
             <div class="stat-holder">
                 <div class="stat" id="mood">
-                    @moodAverage
+                    @ViewData["moodAverage"]
                 </div>
                 Average Mood
             </div>
 
             <div class="stat-holder">
                 <div class="stat" id="overalMood">
-                    @daysWithGoodMood
+                    @ViewData["amountOfGoodDays"]
                 </div>
                 Days With Good Mood
             </div>
 
             <div class="stat-holder">
                 <div class="stat" id="workingOut">
-                    @Math.Round(Model.Average(x => x.MinExercising), 0)
+                    @ViewData["exerciseAverage"]
                 </div>
                 Average Minutes Working Out a Day
             </div>
 
             <div class="stat-holder">
                 <div class="stat" id="sleep">
-                    @sleepAverage
+                    @ViewData["sleepAverage"]
                 </div>
                 Average Hours of Sleep a Day
             </div>
 
             <div class="stat-holder">
                 <div class="stat">
-                    @daysInARow
+                    @ViewData["daysCompleted"]
                 </div>
-                Days in a Row
+                Journals in the past 30 days
             </div>
         </div>
 
@@ -119,19 +69,13 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script>
-        @{
-            string JsonMoodData = Newtonsoft.Json.JsonConvert.SerializeObject(moodData);
-            string JsonWorkOutData = Newtonsoft.Json.JsonConvert.SerializeObject(workOutData);
-            string JsonSleepData = Newtonsoft.Json.JsonConvert.SerializeObject(sleepData);
-            string JsonMoodCount = Newtonsoft.Json.JsonConvert.SerializeObject(moodCount);
-            string JsonDateLabel = Newtonsoft.Json.JsonConvert.SerializeObject(dataLabel);
-        }
 
         let global = {
             chartName: "myChart"
         }
 
-        let count = @Html.Raw(JsonMoodData.Count());
+        let count = @Html.Raw(ViewData["MoodDataJSON"]);
+        count = count.length;
 
         function moodGraph() {
             let options = {
@@ -152,7 +96,7 @@
                     text: 'Daily Mood'
                 }
             }
-            preGraph(1,@Html.Raw(JsonDateLabel),@Html.Raw(JsonMoodData), options);
+            preGraph(1,@Html.Raw(ViewData["DateDataJSON"]),@Html.Raw(ViewData["MoodDataJSON"]), options);
         }
 
         $(document).ready(function () {
@@ -170,7 +114,7 @@
                     text: 'Number of Moods'
                 }
             }
-            preGraph(2, ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(JsonMoodCount), options);
+            preGraph(2, ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(ViewData["MoodByNumberJSON"]), options);
         });
 
         $("#workingOut").click(function () {
@@ -192,7 +136,7 @@
                     text: 'Minutes Working Out a Day'
                 }
             }
-            preGraph(1,@Html.Raw(JsonDateLabel),@Html.Raw(JsonWorkOutData), options);
+            preGraph(1,@Html.Raw(ViewData["DateDataJSON"]),@Html.Raw(ViewData["ExerciseDataJSON"]), options);
         });
 
         $("#sleep").click(function () {
@@ -214,7 +158,7 @@
                     text: 'Hours of Sleep a Day'
                 }
             }
-            preGraph(1,@Html.Raw(JsonDateLabel),@Html.Raw(JsonSleepData),options);
+            preGraph(1,@Html.Raw(ViewData["DateDataJSON"]),@Html.Raw(ViewData["SleepDataJSON"]),options);
         });
     </script>
 }

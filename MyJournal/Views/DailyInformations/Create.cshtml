@@ -17,7 +17,6 @@
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <label asp-for="UserMood" class="control-label"></label>
                 <input asp-for="UserMood" class="form-control" type="range" min="1" max="5" step="1">
@@ -84,13 +83,16 @@
         <div class="col-md-7">
 
             <div class="form-group">
+                <a class="btn btn-info" asp-area="" asp-controller="CustomTemplates" asp-action="Create">
+                    Create Custom Template
+                </a>
                 @* Creation of the options is done in the CustomTemplates.js *@
                 <select id="template" hidden>
                     <option value="Blank">Blank</option>
                 </select>
                 <br />
                 <label asp-for="JournalText" class="control-label"></label>
-                <textarea rows="10" asp-for="JournalText" class="form-control"></textarea>
+                <textarea rows="20" asp-for="JournalText" class="form-control"></textarea>
                 <span asp-validation-for="JournalText" class="text-danger"></span>
             </div>
 
@@ -99,6 +101,8 @@
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </div>
+        </form>
+
     </div>
 
     <div>
@@ -106,7 +110,18 @@
     </div>
 </form>
 
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-        <script src="~/js/CustomTemplates.js"></script>
-    }
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/CustomTemplates.js"></script>
+    <script>
+        let customTemplates = @Html.Raw(ViewData["CustomTemplates"]);
+        for (let i = 0; i < customTemplates.length; i++) {
+            let temp = {
+                text: customTemplates[i].Template,
+                name: customTemplates[i].Name
+            }
+            templates.push(temp);
+        }
+
+    </script>
+}

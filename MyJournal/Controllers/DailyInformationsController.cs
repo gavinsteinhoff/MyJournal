@@ -36,7 +36,7 @@ namespace MyJournal.Controllers
         /// </returns>
         private bool AuthorizeData(DailyInformation dailyInformation)
         {
-            if (dailyInformation.User == User.Identity.Name)
+            if (dailyInformation.User.Trim() == User.Identity.Name.Trim())
             {
                 return true;
             }
@@ -49,6 +49,38 @@ namespace MyJournal.Controllers
         // GET: DailyInformtions
         public async Task<IActionResult> Index()
         {
+            List<DailyInformation> pastMonth = await _context.DailyInformations.Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= 30 && x.User == User.Identity.Name).ToListAsync();
+
+            if (pastMonth.Count >= 5)
+            {
+                ViewData["hideAlert"] = "hidden";
+
+                ViewData["moodAverage"] = Math.Round(pastMonth.Average(x => x.UserMood), 1);
+                ViewData["sleepAverage"] = Math.Round(pastMonth.Average(x => x.HoursSlept), 1);
+                ViewData["exerciseAverage"] = Math.Round(pastMonth.Average(x => x.MinExercising), 0);
+
+                ViewData["daysCompleted"] = pastMonth.Count();
+
+                ViewData["amountOfGoodDays"] = pastMonth.Where(x => x.UserMood > 2).Count();
+
+                List<int> moodByNumbers = new List<int>();
+                moodByNumbers.Add(pastMonth.Where(x => x.UserMood == 1).Count());
+                moodByNumbers.Add(pastMonth.Where(x => x.UserMood == 2).Count());
+                moodByNumbers.Add(pastMonth.Where(x => x.UserMood == 3).Count());
+                moodByNumbers.Add(pastMonth.Where(x => x.UserMood == 4).Count());
+                moodByNumbers.Add(pastMonth.Where(x => x.UserMood == 5).Count());
+
+                ViewData["DateDataJSON"] = Newtonsoft.Json.JsonConvert.SerializeObject(pastMonth.Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList());
+                ViewData["MoodDataJSON"] = Newtonsoft.Json.JsonConvert.SerializeObject(pastMonth.Select(x => x.UserMood).ToList());
+                ViewData["MoodByNumberJSON"] = Newtonsoft.Json.JsonConvert.SerializeObject(moodByNumbers);
+                ViewData["SleepDataJSON"] = Newtonsoft.Json.JsonConvert.SerializeObject(pastMonth.Select(x => x.HoursSlept).ToList());
+                ViewData["ExerciseDataJSON"] = Newtonsoft.Json.JsonConvert.SerializeObject(pastMonth.Select(x => x.MinExercising).ToList());
+            } else
+            {
+                ViewData["error"] = "You will need more data to generate reports";
+                ViewData["hidden"] = "hidden";
+            }
+
             return View(await _context.DailyInformations.Where(x=> x.User == User.Identity.Name).OrderBy(x=> x.DailyInformationDateTime).ToListAsync());
         }
 
@@ -74,6 +106,7 @@ namespace MyJournal.Controllers
         // GET: DailyInformtions/Create
         public IActionResult Create()
         {
+            ViewData["CustomTemplates"] = Newtonsoft.Json.JsonConvert.SerializeObject(_context.CustomTemplates.Where(x => x.User == User.Identity.Name).ToList());
             return View();
         }
 

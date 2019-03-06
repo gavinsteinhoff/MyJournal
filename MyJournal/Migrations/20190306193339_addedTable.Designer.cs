@@ -11,9 +11,10 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(MyJournalContext))]
-    partial class JournalContextModelSnapshot : ModelSnapshot
+    [Migration("20190306193339_addedTable")]
+    partial class addedTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,9 +25,6 @@ namespace MyJournal.Migrations
                 {
                     b.Property<int>("CustomTemplateKey")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name")
-                        .IsRequired();
 
                     b.Property<string>("Template")
                         .IsRequired();

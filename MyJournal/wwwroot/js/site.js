@@ -5,19 +5,14 @@ function preGraph(chartType, labels, data, options) {
     if (chart) {
         chart.destroy();
     }
-    if (labels.length < 5) {
-        $("#error").removeAttr("hidden");
-        $("#error").empty();
-        $("#error").append("Graphs will generate when you provide more data")
-    } else {
-        switch (chartType) {
-            case 1:
-                createLineChart(labels, data, options);
-                break;
-            case 2:
-                createDoughnutChart(labels, data, options);
-                break;
-        }
+
+    switch (chartType) {
+        case 1:
+            createLineChart(labels, data, options);
+            break;
+        case 2:
+            createDoughnutChart(labels, data, options);
+            break;
     }
 }
 
