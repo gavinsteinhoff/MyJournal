@@ -18,6 +18,9 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <a class="btn btn-info" asp-area="" asp-controller="CustomTemplates" asp-action="Create">
+                    Create Custom Template
+                </a>
                 @* Creation of the options is done in the CustomTemplates.js *@
                 <select id="template" hidden>
                     <option value="Blank">Blank</option>
