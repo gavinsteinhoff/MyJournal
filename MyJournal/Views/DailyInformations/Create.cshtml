@@ -33,7 +33,7 @@
                 <input asp-for="UserMood" class="form-control" type="range" min="1" max="5" step="1">
                 <span asp-validation-for="UserMood" class="text-danger"></span>
             </div>
-</div>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-2">
@@ -62,7 +62,7 @@
 
         <div class="form-group">
             <label asp-for="MinPhone" class="control-label"></label>
-            <input asp-for="MinPhone" class="form-control    />
+            <input asp-for="MinPhone" class="form-control      />
             <span asp-validation-for="MinPhone" class="text-danger"></span>
         </div>
 
@@ -103,15 +103,6 @@
             <input type="submit" value="Create" class="btn btn-primary" />
         </div>
 
-
-
-
-
-
-
-
-
-
         </form>
     </div>
 </div>
@@ -123,4 +114,15 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/CustomTemplates.js"></script>
+    <script>
+        let customTemplates = @Html.Raw(ViewData["CustomTemplates"]);
+        for (let i = 0; i < customTemplates.length; i++) {
+            let temp = {
+                text: customTemplates[i].Template,
+                name: customTemplates[i].Name
+            }
+            templates.push(temp);
+        }
+
+    </script>
 }

@@ -106,6 +106,7 @@ namespace MyJournal.Controllers
         // GET: DailyInformtions/Create
         public IActionResult Create()
         {
+            ViewData["CustomTemplates"] = Newtonsoft.Json.JsonConvert.SerializeObject(_context.CustomTemplates.Where(x => x.User == User.Identity.Name).ToList());
             return View();
         }
 
