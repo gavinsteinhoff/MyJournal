@@ -36,7 +36,7 @@ namespace MyJournal.Controllers
         /// </returns>
         private bool AuthorizeData(DailyInformation dailyInformation)
         {
-            if (dailyInformation.User == User.Identity.Name)
+            if (dailyInformation.User.Trim() == User.Identity.Name.Trim())
             {
                 return true;
             }
@@ -150,8 +150,8 @@ namespace MyJournal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DailyInformtionID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinWorkedOut,HoursSlept")] DailyInformation dailyInformtion)
-        {
+        public async Task<IActionResult> Edit(int id, [Bind("DailyInformationID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,HoursSlept")] DailyInformation dailyInformtion)
+        { 
             if (id != dailyInformtion.DailyInformationID || !AuthorizeData(dailyInformtion))
             {
                 return NotFound();
