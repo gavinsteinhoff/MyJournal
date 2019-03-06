@@ -46,7 +46,6 @@ namespace MyJournal.Models.CustomModels
         [Display(Name = "Minutes Exercising")]
         public int MinExercising { get; set; }
 
-        [Required]
         [Display(Name ="Hours of Sleep")]
         public int HoursSlept { get; set; }
 

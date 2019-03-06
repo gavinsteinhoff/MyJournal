@@ -8,15 +8,80 @@
 
 <h4>DailyInformtion</h4>
 <hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form asp-action="Create">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-3">
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="UserMood" class="control-label"></label>
+                <input asp-for="UserMood" class="form-control" type="range" min="1" max="5" step="1">
+                <span asp-validation-for="UserMood" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DownTime" class="control-label"></label>
+                <input asp-for="DownTime" class="form-control" type="time" value="21:00" />
+                <span asp-validation-for="DownTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UpTime" class="control-label"></label>
+                <input asp-for="UpTime" class="form-control" type="time" value="07:00" />
+                <span asp-validation-for="UpTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MinExercising" class="control-label"></label>
+                <input asp-for="MinExercising" class="form-control" value="0" />
+                <span asp-validation-for="MinExercising" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MinPhone" class="control-label"></label>
+                <input asp-for="MinPhone" class="form-control" value="0" />
+                <span asp-validation-for="MinPhone" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MinHobby" class="control-label"></label>
+                <input asp-for="MinHobby" class="form-control" value="0" />
+                <span asp-validation-for="MinHobby" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NumGoodThings" class="control-label"></label>
+                <input asp-for="NumGoodThings" class="form-control" value="0" />
+                <span asp-validation-for="NumGoodThings" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NumPoorThings" class="control-label"></label>
+                <input asp-for="NumPoorThings" class="form-control" value="0" />
+                <span asp-validation-for="NumPoorThings" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OverallDay" class="control-label"></label>
+                <input asp-for="OverallDay" class="form-control" type="range" min="1" max="5" step="1" />
+                <span asp-validation-for="OverallDay" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ExcitedForTomorrow" class="control-label"></label>
+                <input asp-for="ExcitedForTomorrow" class="form-control" type="range" min="1" max="5" step="1" />
+                <span asp-validation-for="ExcitedForTomorrow" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-7">
+
             <div class="form-group">
                 <a class="btn btn-info" asp-area="" asp-controller="CustomTemplates" asp-action="Create">
                     Create Custom Template
@@ -31,88 +96,19 @@
                 <span asp-validation-for="JournalText" class="text-danger"></span>
             </div>
 
+
             <div class="form-group">
-                <label asp-for="UserMood" class="control-label"></label>
-                <input asp-for="UserMood" class="form-control" type="range" min="1" max="5" step="1">
-                <span asp-validation-for="UserMood" class="text-danger"></span>
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-2">
-        <div class="form-group">
-            <label asp-for="MinExercising" class="control-label"></label>
-            <input asp-for="MinExercising" class="form-control" />
-            <span asp-validation-for="MinExercising" class="text-danger"></span>
         </div>
-        <div class="form-group">
-            <label asp-for="HoursSlept" class="control-label"></label>
-            <input asp-for="HoursSlept" class="form-control" />
-            <span asp-validation-for="HoursSlept" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="DownTime" class="control-label"></label>
-            <input asp-for="DownTime" class="form-control" type="time" />
-            <span asp-validation-for="DownTime" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="UpTime" class="control-label"></label>
-            <input asp-for="UpTime" class="form-control" type="time" />
-            <span asp-validation-for="UpTime" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="MinPhone" class="control-label"></label>
-            <input asp-for="MinPhone" class="form-control      />
-            <span asp-validation-for="MinPhone" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="MinHobby" class="control-label"></label>
-            <input asp-for="MinHobby" class="form-control" />
-            <span asp-validation-for="MinHobby" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="NumGoodThings" class="control-label"></label>
-            <input asp-for="NumGoodThings" class="form-control" />
-            <span asp-validation-for="NumGoodThings" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="NumPoorThings" class="control-label"></label>
-            <input asp-for="NumPoorThings" class="form-control" />
-            <span asp-validation-for="NumPoorThings" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="OverallDay" class="control-label"></label>
-            <input asp-for="OverallDay" class="form-control" />
-            <span asp-validation-for="OverallDay" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="ExcitedForTomorrow" class="control-label"></label>
-            <input asp-for="ExcitedForTomorrow" class="form-control" />
-            <span asp-validation-for="ExcitedForTomorrow" class="text-danger"></span>
-        </div>
-
-
-
-
-        <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-primary" />
-        </div>
-
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
