@@ -1,0 +1,36 @@
+﻿@model MyJournal.Models.CustomModels.Sharing
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Sharing</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Giver)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Giver)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Receiver)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Receiver)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PermissionLevel)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PermissionLevel)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.SharingKey">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
