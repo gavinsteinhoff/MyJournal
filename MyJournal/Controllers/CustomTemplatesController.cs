@@ -19,10 +19,22 @@ namespace MyJournal.Controllers
             _context = context;
         }
 
+
+        private bool AuthorizeData(CustomTemplates customTemplate)
+        {
+            if (customTemplate.User == User.Identity.Name)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+
         // GET: CustomTemplates
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CustomTemplates.ToListAsync());
+            return View(await _context.CustomTemplates.Where(x => x.User == User.Identity.Name).ToListAsync());
         }
 
         // GET: CustomTemplates/Details/5
@@ -35,7 +47,7 @@ namespace MyJournal.Controllers
 
             var customTemplates = await _context.CustomTemplates
                 .SingleOrDefaultAsync(m => m.CustomTemplateKey == id);
-            if (customTemplates == null)
+            if (customTemplates == null || !AuthorizeData(customTemplates))
             {
                 return NotFound();
             }
@@ -75,7 +87,7 @@ namespace MyJournal.Controllers
             }
 
             var customTemplates = await _context.CustomTemplates.SingleOrDefaultAsync(m => m.CustomTemplateKey == id);
-            if (customTemplates == null)
+            if (customTemplates == null || !AuthorizeData(customTemplates))
             {
                 return NotFound();
             }
@@ -127,7 +139,7 @@ namespace MyJournal.Controllers
 
             var customTemplates = await _context.CustomTemplates
                 .SingleOrDefaultAsync(m => m.CustomTemplateKey == id);
-            if (customTemplates == null)
+            if (customTemplates == null || !AuthorizeData(customTemplates))
             {
                 return NotFound();
             }

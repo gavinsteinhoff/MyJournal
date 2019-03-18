@@ -36,7 +36,7 @@ namespace MyJournal.Controllers
         /// </returns>
         private bool AuthorizeData(DailyInformation dailyInformation)
         {
-            if (dailyInformation.User.Trim() == User.Identity.Name.Trim())
+            if (dailyInformation.User == User.Identity.Name)
             {
                 return true;
             }
