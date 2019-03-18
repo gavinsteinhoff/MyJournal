@@ -11,10 +11,9 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(MyJournalContext))]
-    [Migration("20190306200740_addedname")]
-    partial class addedname
+    partial class MyJournalContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,6 +80,23 @@ namespace MyJournal.Migrations
                     b.HasKey("DailyInformationID");
 
                     b.ToTable("DailyInformations");
+                });
+
+            modelBuilder.Entity("MyJournal.Models.CustomModels.Sharing", b =>
+                {
+                    b.Property<int>("SharingKey")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Giver");
+
+                    b.Property<int>("PermissionLevel");
+
+                    b.Property<string>("Receiver")
+                        .IsRequired();
+
+                    b.HasKey("SharingKey");
+
+                    b.ToTable("Sharings");
                 });
 #pragma warning restore 612, 618
         }
