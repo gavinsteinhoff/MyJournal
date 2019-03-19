@@ -19,6 +19,16 @@ namespace MyJournal.Controllers
             _context = context;
         }
 
+        public bool CheckAuth(Sharing sharing)
+        {
+            if (sharing.Giver == User.Identity.Name)
+            {
+                return true;
+            }
+            return false;
+        }
+        
+
         // GET: Sharings
         public async Task<IActionResult> Index()
         {
@@ -74,7 +84,7 @@ namespace MyJournal.Controllers
             }
 
             var sharing = await _context.Sharings.SingleOrDefaultAsync(m => m.SharingKey == id);
-            if (sharing == null)
+            if (sharing == null || !CheckAuth(sharing))
             {
                 return NotFound();
             }
@@ -126,7 +136,7 @@ namespace MyJournal.Controllers
 
             var sharing = await _context.Sharings
                 .SingleOrDefaultAsync(m => m.SharingKey == id);
-            if (sharing == null)
+            if (sharing == null || !CheckAuth(sharing))
             {
                 return NotFound();
             }

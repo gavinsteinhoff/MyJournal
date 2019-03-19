@@ -7,10 +7,10 @@
 <h2>Index</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-info" asp-action="Create">Share Your Data</a>
 </p>
-<table class="table">
-    <thead>
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Giver)
@@ -18,7 +18,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.PermissionLevel)
             </th>
+            <th>
 
+            </th>
         </tr>
     </thead>
     <tbody>
