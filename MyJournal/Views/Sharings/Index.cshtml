@@ -32,13 +32,11 @@
                     @Html.DisplayFor(modelItem => item.PermissionLevel)
                 </td>
                 <td>
-                    <form id="giverName" asp-controller="SharedDailyInformations" asp-action="Index"  method="post" role="form">
-                        <button type="submit" name="giverName" value="@item.Giver">
+                    <form id="giverName" asp-controller="SharedDailyInformations" asp-action="Index" method="post" role="form">
+                        <button type="submit" class="btn btn-info" name="giverName" value="@item.Giver">
                             View Data
                         </button>
-
                     </form>
-                    <a asp-controller="SharedDailyInformations" asp-action="Index" asp-route-id="@item.Giver">View Data</a>
                 </td>
             </tr>
         }
