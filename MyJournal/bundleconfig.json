@@ -9,15 +9,23 @@
     ]
   },
   {
+    "outputFileName": "wwwroot/lib/qrcode.min.js",
+    "inputFiles": [
+      "bower_components/qrcodejs/qrcode.js"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/js/site.min.js",
     "inputFiles": [
       "wwwroot/js/site.js"
     ],
+
     // Optionally specify minification options
     "minify": {
       "enabled": true,
       "renameLocals": true
     },
+
     // Optionally generate .map file
     "sourceMap": false
   }
