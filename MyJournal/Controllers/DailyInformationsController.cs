@@ -152,7 +152,7 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DailyInformationID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinExercising,DownTime, UpTime, MinPhone, MinHobby, NumGoodThings, NumPoorThings, OverallDay, ExcitedForTomorrow")] DailyInformation dailyInformtion)
         {
-            if (id != dailyInformtion.DailyInformationID || !AuthorizeData(dailyInformtion))
+            if (id != dailyInformtion.DailyInformationID)
             {
                 return NotFound();
             }
