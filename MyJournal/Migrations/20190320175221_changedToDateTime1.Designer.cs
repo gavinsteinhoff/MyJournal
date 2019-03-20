@@ -11,9 +11,10 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(MyJournalContext))]
-    partial class MyJournalContextModelSnapshot : ModelSnapshot
+    [Migration("20190320175221_changedToDateTime1")]
+    partial class changedToDateTime1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +46,6 @@ namespace MyJournal.Migrations
 
                     b.Property<DateTime>("DailyInformationDateTime");
 
-                    b.Property<DateTime>("DownTime");
-
                     b.Property<int>("ExcitedForTomorrow");
 
                     b.Property<int>("GeneratedMood");
@@ -70,8 +69,6 @@ namespace MyJournal.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired();
-
-                    b.Property<DateTime>("UpTime");
 
                     b.Property<string>("User");
 

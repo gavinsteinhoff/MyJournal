@@ -50,12 +50,14 @@ namespace MyJournal.Models.CustomModels
         public int HoursSlept { get; set; }
 
         [Required]
+        [DataType(DataType.Time)]
         [Display(Name = "Time you went to bed")]
-        public int DownTime { get; set; }
+        public DateTime DownTime { get; set; }
 
         [Required]
+        [DataType(DataType.Time)]
         [Display(Name = "Time you got out of bed")]
-        public int UpTime { get; set; }
+        public DateTime UpTime { get; set; }
 
         [Required]
         [Display(Name = "How many minutes did you spend on your phone today?")]
