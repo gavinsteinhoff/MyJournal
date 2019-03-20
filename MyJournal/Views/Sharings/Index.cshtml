@@ -9,11 +9,12 @@
 <p>
     <a class="btn btn-info" asp-action="Create">Share Your Data</a>
 </p>
+
 <table class="table table-striped table-bordered">
     <thead class="thead-dark">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Giver)
+                Giving Information To
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PermissionLevel)
@@ -24,7 +25,40 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Where(x => x.Giver == User.Identity.Name))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Receiver)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PermissionLevel)
+                </td>
+                <td>
+                    <a class="btn btn-info" asp-action="Delete" asp-route-id="@item.SharingKey">Remove Permission</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                Getting Information From
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PermissionLevel)
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(x => x.Receiver == User.Identity.Name))
         {
             <tr>
                 <td>

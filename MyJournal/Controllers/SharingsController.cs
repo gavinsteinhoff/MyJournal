@@ -32,7 +32,7 @@ namespace MyJournal.Controllers
         // GET: Sharings
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Sharings.Where(x => x.Receiver == User.Identity.Name).ToListAsync());
+            return View(await _context.Sharings.Where(x => x.Receiver == User.Identity.Name || x.Giver == User.Identity.Name).ToListAsync());
         }
 
         // GET: Sharings/Details/5
