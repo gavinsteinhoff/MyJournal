@@ -68,6 +68,7 @@ namespace MyJournal.Controllers
         {
             if (ModelState.IsValid)
             {
+                sharing.Giver = User.Identity.Name;
                 _context.Add(sharing);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
