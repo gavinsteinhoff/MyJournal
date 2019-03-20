@@ -43,6 +43,7 @@ namespace MyJournal.Models.CustomModels
         public int GeneratedMood { get; set; }
 
         [Required]
+        [Range(0, 1440)]
         [Display(Name = "Minutes Exercising")]
         public int MinExercising { get; set; }
 
@@ -60,6 +61,7 @@ namespace MyJournal.Models.CustomModels
         public DateTime UpTime { get; set; }
 
         [Required]
+        [Range(0, 1440)]
         [Display(Name = "How many minutes did you spend on your phone today?")]
         public int MinPhone { get; set; }
 
