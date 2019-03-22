@@ -11,15 +11,25 @@
 <form asp-action="Create">
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserMood" class="control-label"></label>
-                <input asp-for="UserMood" class="form-control" type="range" min="1" max="5" step="1">
+
+            <div class="cc-selector">
+                <label asp-for="UserMood" class="control-label"></label><br />
+                <input asp-for="UserMood" id="c1" type="radio" value="1">
+                <label class="face-cc mood1" for="c1"></label>
+                <input asp-for="UserMood" id="c2" type="radio" value="2">
+                <label class="face-cc mood2" for="c2"></label>
+                <input asp-for="UserMood" id="c3" type="radio" value="3">
+                <label class="face-cc mood3" for="c3"></label>
+                <input asp-for="UserMood" id="c4" type="radio" value="4">
+                <label class="face-cc mood4" for="c4"></label>
+                <input asp-for="UserMood" id="c5" type="radio" value="5">
+                <label class="face-cc mood5" for="c5"></label>
                 <span asp-validation-for="UserMood" class="text-danger"></span>
             </div>
 

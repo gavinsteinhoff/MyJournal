@@ -20,73 +20,21 @@
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-
-            @*<div class="form-group">
-            <label asp-for="UserMood" class="control-label"></label>
-            <input asp-for="UserMood" class="form-control" type="range" min="1" max="5" step="1">
-            <span asp-validation-for="UserMood" class="text-danger"></span>
-        </div>*@
-
-
-            <style>
-                .cc-selector input {
-                    margin: 0;
-                    padding: 0;
-                    -webkit-appearance: none;
-                    -moz-appearance: none;
-                }
-
-                .cat {
-                    background-image: url(https://placekitten.com/400/300);
-                }
-
-                .drinkcard-cc {
-                    cursor: pointer;
-                    background-size: contain;
-                    background-repeat: no-repeat;
-                    display: inline-block;
-                    width: 100px;
-                    height: 70px;
-                    -webkit-transition: all 100ms ease-in;
-                    -moz-transition: all 100ms ease-in;
-                    transition: all 100ms ease-in;
-                    -webkit-filter: brightness(1.8) grayscale(1);
-                    -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
-                    filter: brightness(1.8) grayscale(1) opacity(.7);
-                }
-
-                    .drinkcard-cc:hover {
-                        -webkit-filter: brightness(1.2) grayscale(.5);
-                        -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
-                        filter: brightness(1.2) grayscale(.5) opacity(.9);
-                    }
-
-                .cc-selector input:active + .drinkcard-cc {
-                    opacity: .9;
-                }
-
-                .cc-selector input:checked + .drinkcard-cc {
-                    -webkit-filter: none;
-                    -moz-filter: none;
-                    filter: none;
-                }
-            </style>
-
+            
             <div class="cc-selector">
                 <label asp-for="UserMood" class="control-label"></label><br />
                 <input asp-for="UserMood" id="c1" type="radio" value="1">
-                <label class="drinkcard-cc cat" for="c1"></label>
+                <label class="face-cc mood1" for="c1"></label>
                 <input asp-for="UserMood" id="c2" type="radio" value="2">
-                <label class="drinkcard-cc cat" for="c2"></label>
+                <label class="face-cc mood2" for="c2"></label>
                 <input asp-for="UserMood" id="c3" type="radio" value="3">
-                <label class="drinkcard-cc cat" for="c3"></label>
+                <label class="face-cc mood3" for="c3"></label>
                 <input asp-for="UserMood" id="c4" type="radio" value="4">
-                <label class="drinkcard-cc cat" for="c4"></label>
+                <label class="face-cc mood4" for="c4"></label>
                 <input asp-for="UserMood" id="c5" type="radio" value="5">
-                <label class="drinkcard-cc cat" for="c5"></label>
+                <label class="face-cc mood5" for="c5"></label>
                 <span asp-validation-for="UserMood" class="text-danger"></span>
             </div>
-
 
             <div class="form-group">
                 <label asp-for="DownTime" class="control-label"></label>

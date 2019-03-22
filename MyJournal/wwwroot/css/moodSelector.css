@@ -1,0 +1,57 @@
+﻿.cc-selector input {
+    margin: 0;
+    padding: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.mood1 {
+    background-image: url(https://cdn.shopify.com/s/files/1/1061/1924/products/Crying_Emoji_Icon_2_large.png?v=1542436033);
+}
+
+.mood2 {
+    background-image: url(https://cdn.shopify.com/s/files/1/1061/1924/products/Crying_Emoji_Icon_548f640f-8622-4d07-ad75-053eb5cf3b03_large.png?v=1542436043);
+}
+
+.mood3 {
+    background-image: url(https://cdn.shopify.com/s/files/1/1061/1924/products/Expressionless_Emoji_Icon_45516a90-b907-4345-888a-37597cd6e42e_large.png?v=1542446804);
+}
+
+.mood4 {
+    background-image: url(https://cdn.shopify.com/s/files/1/1061/1924/products/Slightly_Smiling_Emoji_Icon_34f238ed-d557-4161-b966-779d8f37b1ac_large.png?v=1542436014);
+}
+
+.mood5 {
+    background-image: url(https://cdn.shopify.com/s/files/1/1061/1924/products/Emoji_Icon_-_Smiling_large.png?v=1542446805);
+}
+
+.face-cc {
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 100px;
+    height: 70px;
+    -webkit-transition: all 100ms ease-in;
+    -moz-transition: all 100ms ease-in;
+    transition: all 100ms ease-in;
+    -webkit-filter: brightness(1.8) grayscale(1);
+    -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+    filter: brightness(1.8) grayscale(1) opacity(.7);
+}
+
+    .face-cc:hover {
+        -webkit-filter: brightness(1.2) grayscale(.5);
+        -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+        filter: brightness(1.2) grayscale(.5) opacity(.9);
+    }
+
+.cc-selector input:active + .face-cc {
+    opacity: .9;
+}
+
+.cc-selector input:checked + .face-cc {
+    -webkit-filter: none;
+    -moz-filter: none;
+    filter: none;
+}
