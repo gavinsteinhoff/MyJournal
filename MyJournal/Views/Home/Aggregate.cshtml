@@ -1,0 +1,155 @@
+﻿@model IEnumerable<MyJournal.Models.CustomModels.DailyInformation>
+
+@{
+    ViewData["Title"] = "Aggregate";
+}
+
+<div class="row">
+    <div class="col-12 col-md-10 py-2">
+
+        
+        <div class="alert alert-danger" role="alert" id="error" @ViewData["hideAlert"]>@ViewData["error"]</div>
+        <canvas id="myChart" height="100"></canvas>
+
+        <div class="stats my-5" @ViewData["hidden"]>
+            <div class="stat-holder">
+                <div class="stat" id="mood">
+                    @ViewData["moodAverage"]
+                </div>
+                Average Mood
+            </div>
+
+            <div class="stat-holder">
+                <div class="stat" id="overalMood">
+                    @ViewData["amountOfGoodDays"]
+                </div>
+                Days With Good Mood
+            </div>
+
+            <div class="stat-holder">
+                <div class="stat" id="workingOut">
+                    @ViewData["exerciseAverage"]
+                </div>
+                Average Minutes Working Out a Day
+            </div>
+
+            <div class="stat-holder">
+                <div class="stat" id="sleep">
+                    @ViewData["sleepAverage"]
+                </div>
+                Average Hours of Sleep a Day
+            </div>
+
+            <div class="stat-holder">
+                <div class="stat">
+                    @ViewData["daysCompleted"]
+                </div>
+                Journals in the past year
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script>
+
+        let global = {
+            chartName: "myChart"
+        }
+
+        let count = @Html.Raw(ViewData["MoodDataJSON"]);
+        count = count.length;
+
+        function moodGraph() {
+            let options = {
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMin: 1,
+                            stepSize: 1
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Daily Mood'
+                }
+            }
+            preGraph(1,@Html.Raw(ViewData["DateDataJSON"]),@Html.Raw(ViewData["MoodDataJSON"]), options);
+        }
+
+        $(document).ready(function () {
+            moodGraph();
+        });
+
+        $("#mood").click(function () {
+            moodGraph();
+        });
+
+        $("#overalMood").click(function () {
+            let options= {
+                title: {
+                    display: true,
+                    text: 'Number of Moods'
+                }
+            }
+            preGraph(2, ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(ViewData["MoodByNumberJSON"]), options);
+        });
+
+        $("#workingOut").click(function () {
+            let options = {
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMin: 0,
+                            stepSize: 15
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Minutes Working Out a Day'
+                }
+            }
+            preGraph(1,@Html.Raw(ViewData["DateDataJSON"]),@Html.Raw(ViewData["ExerciseDataJSON"]), options);
+        });
+
+        $("#sleep").click(function () {
+            let options = {
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMin: 0,
+                            stepSize: 1
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Hours of Sleep a Day'
+                }
+            }
+            preGraph(1,@Html.Raw(ViewData["DateDataJSON"]),@Html.Raw(ViewData["SleepDataJSON"]),options);
+        });
+    </script>
+}
+
+
