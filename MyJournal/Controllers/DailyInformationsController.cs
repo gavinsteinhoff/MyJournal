@@ -49,7 +49,7 @@ namespace MyJournal.Controllers
         // GET: DailyInformtions
         public async Task<IActionResult> Index()
         {
-            List<DailyInformation> pastMonth = await _context.DailyInformations.Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= 30 && x.User == User.Identity.Name).ToListAsync();
+            List<DailyInformation> pastMonth = await _context.DailyInformations.Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= 300 && x.User == User.Identity.Name).ToListAsync();
 
             if (pastMonth.Count >= 5)
             {
