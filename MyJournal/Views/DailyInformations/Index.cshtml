@@ -21,50 +21,54 @@
     <div class="col-12 col-md-10 py-2">
 
         <a class="btn btn-primary mb-5" asp-action="Create">Create New</a>
-        <div class="alert alert-danger" role="alert" id="error" @ViewData["hideAlert"]>@ViewData["error"]</div>
-        <canvas id="myChart" height="100"></canvas>
 
-        <div class="stats my-5">
-            <div class="stat-holder">
-                <div class="stat" id="mood">
-                    @Math.Round(Model.Average(x => x.UserMood), 1)
+        @if (Model.Count() >= 5)
+        {
+            <canvas id="myChart" height="100"></canvas>
+            <div class="stats my-5">
+                <div class="stat-holder">
+                    <div class="stat" id="mood">
+                        @Math.Round(Model.Average(x => x.UserMood), 1)
+                    </div>
+                    Average Mood
                 </div>
-                Average Mood
-            </div>
 
-            <div class="stat-holder">
-                <div class="stat" id="overalMood">
-                    @Model.Count(x => x.UserMood >= 3)
+                <div class="stat-holder">
+                    <div class="stat" id="overalMood">
+                        @Model.Count(x => x.UserMood >= 3)
+                    </div>
+                    Days With Good Mood
                 </div>
-                Days With Good Mood
-            </div>
 
-            <div class="stat-holder">
-                <div class="stat" id="workingOut">
-                    @Math.Round(Model.Average(x => x.MinExercising),0)
+                <div class="stat-holder">
+                    <div class="stat" id="workingOut">
+                        @Math.Round(Model.Average(x => x.MinExercising), 0)
+                    </div>
+                    Average Minutes Working Out a Day
                 </div>
-                Average Minutes Working Out a Day
-            </div>
 
-            <div class="stat-holder">
-                <div class="stat" id="sleep">
-                    @Math.Round(Model.Average(x => x.HoursSlept), 1)
+                <div class="stat-holder">
+                    <div class="stat" id="sleep">
+                        @Math.Round(Model.Average(x => x.HoursSlept), 1)
+                    </div>
+                    Average Hours of Sleep a Day
                 </div>
-                Average Hours of Sleep a Day
-            </div>
 
-            <div class="stat-holder">
-                <div class="stat">
-                    @Model.Count()
+                <div class="stat-holder">
+                    <div class="stat">
+                        @Model.Count()
+                    </div>
+                    Journals in this period
                 </div>
-                Journals in this period
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="alert alert-danger" role="alert" id="error">You must have at least 5 days completed to unlock reporting</div>
+        }
 
     </div>
 </div>
-
-
 
 
 @section Scripts {
@@ -121,7 +125,15 @@
                     text: 'Number of Moods'
                 }
             }
-            preGraph(2, ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(ViewData["MoodByNumberJSON"]), options);
+            @{ 
+                List<int> mood = new List<int>();
+                mood.Add(Model.Count(x => x.UserMood == 1));
+                mood.Add(Model.Count(x => x.UserMood == 2));
+                mood.Add(Model.Count(x => x.UserMood == 3));
+                mood.Add(Model.Count(x => x.UserMood == 4));
+                mood.Add(Model.Count(x => x.UserMood == 5));
+            }
+            preGraph(2, ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(JsonConvert.SerializeObject(mood)), options);
         });
 
         $("#workingOut").click(function () {
