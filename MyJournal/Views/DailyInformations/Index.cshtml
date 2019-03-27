@@ -151,7 +151,14 @@
                     text: 'Daily Mood'
                 }
             }
-            preGraph(3,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.UserMood).ToList()))'), options);
+            @{
+                List<double> moodByMonth = new List<double>();
+                foreach(var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => x.DailyInformationDateTime.Month).Distinct().ToList()))
+                {
+                    moodByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.UserMood));
+                }
+            }
+            preGraph(3,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(moodByMonth))'), options);
         }
 
         $(document).ready(function () {
