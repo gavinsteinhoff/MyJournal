@@ -6,7 +6,8 @@
     // An array of relative input file paths. Globbing patterns supported
     "inputFiles": [
       "wwwroot/css/site.css",
-      "wwwroot/css/moodSelector.css"
+      "wwwroot/css/moodSelector.css",
+      "wwwroot/css/DailyInformation-Index.css"
     ]
   },
   {
@@ -18,7 +19,9 @@
   {
     "outputFileName": "wwwroot/js/site.min.js",
     "inputFiles": [
-      "wwwroot/js/site.js"
+      "wwwroot/js/site.js",
+      "wwwroot/js/CustomTemplate.js",
+      "wwwroot/js/DailyInformation-Index.js"
     ],
 
     // Optionally specify minification options

@@ -20,8 +20,7 @@ namespace MyJournal.Controllers
         {
             _context = context;
         }
-
-
+        
         // Custom Methods
 
         /// <summary>
@@ -44,11 +43,24 @@ namespace MyJournal.Controllers
         }
         //End Custom
 
-
-
         // GET: DailyInformtions
         public async Task<IActionResult> Index(int? daysOld = 30)
         {
+            switch(daysOld)
+            {
+                case 7:
+                    ViewBag.Active7 = "active";
+                    break;
+                case 30:
+                    ViewBag.Active30 = "active";
+                    break;
+                case 183:
+                    ViewBag.Active183 = "active";
+                    break;
+                case 365:
+                    ViewBag.Active365 = "active";
+                    break;
+            }
             return View(await _context.DailyInformations.Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld && x.User == User.Identity.Name).ToListAsync());
         }
 

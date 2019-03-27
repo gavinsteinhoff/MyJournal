@@ -19,40 +19,38 @@
     <div class="col-12 col-md-10 py-2">
 
         <a class="btn btn-info mb-5" asp-action="Create">Create New</a>
-
-
+        
         <nav>
             <ul class="pagination">
-                <li class="page-item">
+                <li class="page-item @ViewBag.Active7">
                     <a class="page-link" asp-action="Index" asp-route-daysOld="7">
                         Past 7 Days
                     </a>
                 </li>
-                <li class="page-item">
+                <li class="page-item @ViewBag.Active30">
                     <a class="page-link" asp-action="Index" asp-route-daysOld="30">
                         Past 30 Days
                     </a>
                 </li>
-                <li class="page-item">
+                <li class="page-item @ViewBag.Active183">
                     <a class="page-link" asp-action="Index" asp-route-daysOld="183">
                         Past 6 Months
                     </a>
                 </li>
-                <li class="page-item">
+                <li class="page-item @ViewBag.Active365">
                     <a class="page-link" asp-action="Index" asp-route-daysOld="365">
                         Past Year
                     </a>
                 </li>
             </ul>
         </nav>
-
-
+        
         @if (Model.Count() >= 5)
         {
             <canvas id="myChart" height="100"></canvas>
             <div class="stats my-5">
                 <div class="stat-holder">
-                    <div class="stat" id="mood">
+                    <div class="stat active" id="mood">
                         @Math.Round(Model.Average(x => x.UserMood), 1)
                     </div>
                     Average Mood
@@ -94,7 +92,6 @@
 
     </div>
 </div>
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
