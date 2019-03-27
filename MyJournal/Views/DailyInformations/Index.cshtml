@@ -16,11 +16,36 @@
         }
     </div>
 
-
-
     <div class="col-12 col-md-10 py-2">
 
-        <a class="btn btn-primary mb-5" asp-action="Create">Create New</a>
+        <a class="btn btn-info mb-5" asp-action="Create">Create New</a>
+
+
+        <nav>
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-daysOld="7">
+                        Past 7 Days
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-daysOld="30">
+                        Past 30 Days
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-daysOld="183">
+                        Past 6 Months
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-daysOld="365">
+                        Past Year
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
 
         @if (Model.Count() >= 5)
         {
@@ -125,7 +150,7 @@
                     text: 'Number of Moods'
                 }
             }
-            @{ 
+            @{
                 List<int> mood = new List<int>();
                 mood.Add(Model.Count(x => x.UserMood == 1));
                 mood.Add(Model.Count(x => x.UserMood == 2));

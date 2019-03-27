@@ -47,9 +47,9 @@ namespace MyJournal.Controllers
 
 
         // GET: DailyInformtions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? daysOld = 30)
         {
-           return View(await _context.DailyInformations.Where(x=> x.User == User.Identity.Name).OrderBy(x=> x.DailyInformationDateTime).ToListAsync());
+            return View(await _context.DailyInformations.Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld && x.User == User.Identity.Name).ToListAsync());
         }
 
         // GET: DailyInformtions/Details/5
