@@ -19,7 +19,7 @@
     <div class="col-12 col-md-10 py-2">
 
         <a class="btn btn-info mb-5" asp-action="Create">Create New</a>
-        
+
         <nav>
             <ul class="pagination">
                 <li class="page-item @ViewBag.Active7">
@@ -44,7 +44,7 @@
                 </li>
             </ul>
         </nav>
-        
+
         @if (Model.Count() >= 5)
         {
             <canvas id="myChart" height="100"></canvas>
@@ -108,9 +108,9 @@
             chartName: "myChart"
         }
 
-        let dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList()))')
+        let dateLabels;
 
-        function moodGraph() {
+        function moodGraphDay() {
             let options = {
                 scales: {
                     yAxes: [{
@@ -132,6 +132,28 @@
             preGraph(1,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.UserMood).ToList()))'), options);
         }
 
+        function moodGraphMonth() {
+            let options = {
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMin: 1,
+                            stepSize: 1
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Daily Mood'
+                }
+            }
+            preGraph(3,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.UserMood).ToList()))'), options);
+        }
+
         $(document).ready(function () {
             moodGraph();
         });
@@ -139,6 +161,16 @@
         $("#mood").click(function () {
             moodGraph();
         });
+
+        function moodGraph() {
+            if ("@ViewBag.Active7" == 'active' || "@ViewBag.Active30" == 'active') {
+                dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList()))')
+                moodGraphDay();
+            } else {
+                dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => x.DailyInformationDateTime.Month).Distinct().ToList()))')
+                moodGraphMonth();
+            }
+        }
 
         $("#overalMood").click(function () {
             let options= {

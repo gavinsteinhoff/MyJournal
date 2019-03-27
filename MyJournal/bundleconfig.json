@@ -21,7 +21,8 @@
     "inputFiles": [
       "wwwroot/js/site.js",
       "wwwroot/js/CustomTemplate.js",
-      "wwwroot/js/DailyInformation-Index.js"
+      "wwwroot/js/DailyInformation-Index.js",
+      "wwwroot/js/graph.js"
     ],
 
     // Optionally specify minification options
