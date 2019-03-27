@@ -49,72 +49,24 @@ namespace MyJournal.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> Aggregate()
+        public async Task<IActionResult> Aggregate(int? daysOld = 30)
         {
-            List<DailyInformation> pastYear = await _context.DailyInformations.Where(x => x.DailyInformationDateTime.Year == DateTime.Now.Year).ToListAsync();
-
-            if (pastYear.Count >= 5)
+            switch (daysOld)
             {
-                ViewData["hideAlert"] = "hidden";
-
-                ViewData["moodAverage"] = Math.Round(pastYear.Average(x => x.UserMood), 1);
-                ViewData["sleepAverage"] = Math.Round(pastYear.Average(x => x.HoursSlept), 1);
-                ViewData["exerciseAverage"] = Math.Round(pastYear.Average(x => x.MinExercising), 0);
-
-                ViewData["daysCompleted"] = pastYear.Count();
-
-                ViewData["amountOfGoodDays"] = pastYear.Where(x => x.UserMood > 2).Count();
-
-                List<int> moodByNumbers = new List<int>();
-                moodByNumbers.Add(pastYear.Where(x => x.UserMood == 1).Count());
-                moodByNumbers.Add(pastYear.Where(x => x.UserMood == 2).Count());
-                moodByNumbers.Add(pastYear.Where(x => x.UserMood == 3).Count());
-                moodByNumbers.Add(pastYear.Where(x => x.UserMood == 4).Count());
-                moodByNumbers.Add(pastYear.Where(x => x.UserMood == 5).Count());
-
-
-                List<double> MoodData = new List<double>();
-                List<double> SleepData = new List<double>();
-                List<double> ExerciseData = new List<double>();
-                List<string> DateData = new List<string>();
-                for (int i = 1; i <= 12; i++)
-                {
-                    List<DailyInformation> monthData = pastYear.Where(x => x.DailyInformationDateTime.Month == i).ToList();
-                    if (monthData.Count == 0)
-                    {
-                    }
-                    else
-                    {
-                        MoodData.Add(monthData.Average(x => x.UserMood));
-                        SleepData.Add(monthData.Average(x => x.HoursSlept));
-                        ExerciseData.Add(monthData.Average(x => x.MinExercising));
-                        DateData.Add(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i));
-
-                    }
-                }
-
-
-
-
-
-
-
-
-
-
-                    ViewData["DateDataJSON"] = Newtonsoft.Json.JsonConvert.SerializeObject(DateData);
-                    ViewData["MoodDataJSON"] = Newtonsoft.Json.JsonConvert.SerializeObject(MoodData);
-                    ViewData["MoodByNumberJSON"] = Newtonsoft.Json.JsonConvert.SerializeObject(moodByNumbers);
-                    ViewData["SleepDataJSON"] = Newtonsoft.Json.JsonConvert.SerializeObject(SleepData);
-                    ViewData["ExerciseDataJSON"] = Newtonsoft.Json.JsonConvert.SerializeObject(ExerciseData);
-                }
-            else
-            {
-                    ViewData["error"] = "You will need more data to generate reports";
-                    ViewData["hidden"] = "hidden";
-                }
-
-                return View(await _context.DailyInformations.OrderBy(x => x.DailyInformationDateTime).ToListAsync());
+                case 7:
+                    ViewBag.Active7 = "active";
+                    break;
+                case 30:
+                    ViewBag.Active30 = "active";
+                    break;
+                case 183:
+                    ViewBag.Active183 = "active";
+                    break;
+                case 365:
+                    ViewBag.Active365 = "active";
+                    break;
             }
+            return View(await _context.DailyInformations.Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld).ToListAsync());
         }
     }
+}
