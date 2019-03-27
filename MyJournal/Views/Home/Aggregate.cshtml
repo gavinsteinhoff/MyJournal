@@ -1,61 +1,105 @@
 ﻿@model IEnumerable<MyJournal.Models.CustomModels.DailyInformation>
-
+@using Newtonsoft.Json
 @{
-    ViewData["Title"] = "Aggregate";
+    ViewData["Title"] = "Index";
 }
 
+
 <div class="row">
+    <div class="col bg-dark border-top border-light text-light sideMenuLink">
+        @foreach (var item in Model.OrderByDescending(x => x.DailyInformationDateTime).Take(20))
+        {
+            <a asp-action="Details" asp-route-id="@item.DailyInformationID">
+                @item.DailyInformationDateTime.ToString("MM/dd/yy") - @Html.DisplayFor(modelItem => item.Title)
+            </a>
+            <br />
+        }
+    </div>
+
     <div class="col-12 col-md-10 py-2">
 
-        
-        <div class="alert alert-danger" role="alert" id="error" @ViewData["hideAlert"]>@ViewData["error"]</div>
-        <canvas id="myChart" height="100"></canvas>
 
-        <div class="stats my-5" @ViewData["hidden"]>
-            <div class="stat-holder">
-                <div class="stat" id="mood">
-                    @ViewData["moodAverage"]
-                </div>
-                Average Mood
-            </div>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item @ViewBag.Active7">
+                    <a class="page-link" asp-action="Aggregate" asp-route-daysOld="7">
+                        Past 7 Days
+                    </a>
+                </li>
+                <li class="page-item @ViewBag.Active30">
+                    <a class="page-link" asp-action="Aggregate" asp-route-daysOld="30">
+                        Past 30 Days
+                    </a>
+                </li>
+                <li class="page-item @ViewBag.Active183">
+                    <a class="page-link" asp-action="Aggregate" asp-route-daysOld="183">
+                        Past 6 Months
+                    </a>
+                </li>
+                <li class="page-item @ViewBag.Active365">
+                    <a class="page-link" asp-action="Aggregate" asp-route-daysOld="365">
+                        Past Year
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-            <div class="stat-holder">
-                <div class="stat" id="overalMood">
-                    @ViewData["amountOfGoodDays"]
+        @if (Model.Count() >= 5)
+        {
+            <canvas id="myChart" height="100"></canvas>
+            <div class="stats my-5">
+                <div class="stat-holder">
+                    <div class="stat active" id="mood">
+                        @Math.Round(Model.Average(x => x.UserMood), 1)
+                    </div>
+                    Average Mood
                 </div>
-                Days With Good Mood
-            </div>
 
-            <div class="stat-holder">
-                <div class="stat" id="workingOut">
-                    @ViewData["exerciseAverage"]
+                <div class="stat-holder">
+                    <div class="stat" id="overalMood">
+                        @Model.Count(x => x.UserMood >= 3)
+                    </div>
+                    Days With Good Mood
                 </div>
-                Average Minutes Working Out a Day
-            </div>
 
-            <div class="stat-holder">
-                <div class="stat" id="sleep">
-                    @ViewData["sleepAverage"]
+                <div class="stat-holder">
+                    <div class="stat" id="workingOut">
+                        @Math.Round(Model.Average(x => x.MinExercising), 0)
+                    </div>
+                    Average Minutes Working Out a Day
                 </div>
-                Average Hours of Sleep a Day
-            </div>
 
-            <div class="stat-holder">
-                <div class="stat">
-                    @ViewData["daysCompleted"]
+                <div class="stat-holder">
+                    <div class="stat" id="sleep">
+                        @Math.Round(Model.Average(x => x.HoursSlept), 1)
+                    </div>
+                    Average Hours of Sleep a Day
                 </div>
-                Journals in the past year
+
+                <div class="stat-holder">
+                    <div class="stat">
+                        @Model.Count()
+                    </div>
+                    Journals in this period
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="alert alert-danger" role="alert" id="error">You must have at least 5 days completed to unlock reporting</div>
+        }
 
     </div>
 </div>
 
-
-
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        let neededHeight = ($('body').height() - $('.navbar').height()) - $('footer').height();
+        $('.sideMenuLink').css('height', neededHeight);
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script>
 
@@ -63,10 +107,9 @@
             chartName: "myChart"
         }
 
-        let count = @Html.Raw(ViewData["MoodDataJSON"]);
-        count = count.length;
+        let dateLabels;
 
-        function moodGraph() {
+        function moodGraphDay() {
             let options = {
                 scales: {
                     yAxes: [{
@@ -85,7 +128,29 @@
                     text: 'Daily Mood'
                 }
             }
-            preGraph(1,@Html.Raw(ViewData["DateDataJSON"]),@Html.Raw(ViewData["MoodDataJSON"]), options);
+            preGraph(1,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.UserMood).ToList()))'), options);
+        }
+
+        function moodGraphMonth() {
+            let options = {
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMin: 1,
+                            stepSize: 1
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Daily Mood'
+                }
+            }
+            preGraph(3,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.UserMood).ToList()))'), options);
         }
 
         $(document).ready(function () {
@@ -96,6 +161,16 @@
             moodGraph();
         });
 
+        function moodGraph() {
+            if ("@ViewBag.Active7" == 'active' || "@ViewBag.Active30" == 'active') {
+                dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList()))')
+                moodGraphDay();
+            } else {
+                dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => x.DailyInformationDateTime.Month).Distinct().ToList()))')
+                moodGraphMonth();
+            }
+        }
+
         $("#overalMood").click(function () {
             let options= {
                 title: {
@@ -103,7 +178,15 @@
                     text: 'Number of Moods'
                 }
             }
-            preGraph(2, ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(ViewData["MoodByNumberJSON"]), options);
+            @{
+                List<int> mood = new List<int>();
+                mood.Add(Model.Count(x => x.UserMood == 1));
+                mood.Add(Model.Count(x => x.UserMood == 2));
+                mood.Add(Model.Count(x => x.UserMood == 3));
+                mood.Add(Model.Count(x => x.UserMood == 4));
+                mood.Add(Model.Count(x => x.UserMood == 5));
+            }
+            preGraph(2, ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(JsonConvert.SerializeObject(mood)), options);
         });
 
         $("#workingOut").click(function () {
@@ -125,7 +208,7 @@
                     text: 'Minutes Working Out a Day'
                 }
             }
-            preGraph(1,@Html.Raw(ViewData["DateDataJSON"]),@Html.Raw(ViewData["ExerciseDataJSON"]), options);
+            preGraph(1,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.MinExercising).ToList()))'), options);
         });
 
         $("#sleep").click(function () {
@@ -147,7 +230,7 @@
                     text: 'Hours of Sleep a Day'
                 }
             }
-            preGraph(1,@Html.Raw(ViewData["DateDataJSON"]),@Html.Raw(ViewData["SleepDataJSON"]),options);
+            preGraph(1,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.HoursSlept).ToList()))'),options);
         });
     </script>
 }
