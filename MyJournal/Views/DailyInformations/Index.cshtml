@@ -138,7 +138,7 @@
                     yAxes: [{
                         display: true,
                         ticks: {
-                            suggestedMin: 1,
+                            suggestedMin: 0,
                             stepSize: 1
                         }
                     }]
@@ -153,7 +153,7 @@
             }
             @{
                 List<double> moodByMonth = new List<double>();
-                foreach(var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => x.DailyInformationDateTime.Month).Distinct().ToList()))
+                foreach(var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Month)).Distinct().ToList()))
                 {
                     moodByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.UserMood));
                 }
@@ -174,7 +174,7 @@
                 dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList()))')
                 moodGraphDay();
             } else {
-                dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => x.DailyInformationDateTime.Month).Distinct().ToList()))')
+                dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.DailyInformationDateTime.Month) + " " + x.DailyInformationDateTime.Year).Distinct().ToList()))')
                 moodGraphMonth();
             }
         }
