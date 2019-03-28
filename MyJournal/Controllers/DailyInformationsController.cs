@@ -44,8 +44,9 @@ namespace MyJournal.Controllers
         //End Custom
 
         // GET: DailyInformtions
-        public async Task<IActionResult> Index(int? daysOld = 30)
+        public async Task<IActionResult> Index(int? daysOld = 30, string curr = "mood")
         {
+            ViewBag.curr = curr;
             switch(daysOld)
             {
                 case 7:
