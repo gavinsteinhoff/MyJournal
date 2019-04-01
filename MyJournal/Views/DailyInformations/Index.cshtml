@@ -96,10 +96,10 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    <script>
+    @*<script>
         let neededHeight = ($('body').height() - $('.navbar').height()) - $('footer').height();
         $('.sideMenuLink').css('height', neededHeight);
-    </script>
+    </script>*@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script>
