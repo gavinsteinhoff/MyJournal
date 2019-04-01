@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col bg-dark border-top border-light text-light sideMenuLink">
-        @foreach (var item in Model.OrderByDescending(x => x.DailyInformationDateTime).Take(20))
+        @foreach (var item in Model.OrderByDescending(x => x.DailyInformationDateTime))
         {
             <a asp-action="Details" asp-route-id="@item.DailyInformationID">
                 @item.DailyInformationDateTime.ToString("MM/dd/yy") - @Html.DisplayFor(modelItem => item.Title)
@@ -16,7 +16,7 @@
         }
     </div>
 
-    <div class="col-12 col-md-10 py-2">
+    <div class="col-12 col-md-10 py-2 bg-light">
 
         <a class="btn btn-info mb-5" asp-action="Create">Create New</a>
 
@@ -50,7 +50,7 @@
             <canvas id="myChart" height="100"></canvas>
             <div class="stats my-5">
                 <div class="stat-holder">
-                    <div class="stat active" id="mood">
+                    <div class="stat" id="mood">
                         @Math.Round(Model.Average(x => x.UserMood), 1)
                     </div>
                     Average Mood
@@ -162,15 +162,19 @@
             switch (type) {
                 case "mood":
                     moodGraph(time);
+                    $("#mood").addClass("active");
                     break;
                 case "sleep":
-                    sleepGraph(time);
+                    SleepGraph(time);
+                    $("#sleep").addClass("active");
                     break;
                 case "averageMood":
                     AverageMoodGraph();
+                    $("#overalMood").addClass("active");
                     break;
                 case "workingOut":
                     WorkingOutGraph(time);
+                    $("#workingOut").addClass("active");
                     break;
             }
         }
@@ -264,7 +268,7 @@
             $(".page-item a").each(function () {
                 var $this = $(this);
                 var _href = $this.attr("href");
-                $this.attr("href", _href + '&curr=' + type);
+                $this.attr("href", _href.split("&")[0] + '&curr=' + type);
             });
 
         }
