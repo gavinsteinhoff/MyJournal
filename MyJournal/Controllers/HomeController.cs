@@ -51,6 +51,7 @@ namespace MyJournal.Controllers
 
         public async Task<IActionResult> Aggregate(int? daysOld = 30, string curr = "mood")
         {
+            ViewBag.curr = curr;
             switch (daysOld)
             {
                 case 7:
