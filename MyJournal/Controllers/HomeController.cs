@@ -49,8 +49,9 @@ namespace MyJournal.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> Aggregate(int? daysOld = 30)
+        public async Task<IActionResult> Aggregate(int? daysOld = 30, string curr = "mood")
         {
+            ViewBag.curr = curr;
             switch (daysOld)
             {
                 case 7:
