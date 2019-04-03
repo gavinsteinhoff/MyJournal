@@ -155,7 +155,7 @@
 
         function Graph(time,type) {
             if (time == "day") {
-                dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList()))')
+                dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList()))')
             } else {
                 dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.DailyInformationDateTime.Month) + " " + x.DailyInformationDateTime.Year).Distinct().ToList()))')
             }
