@@ -27,7 +27,7 @@ function createBarGraph(labels, data, options) {
             labels: labels,
             datasets: [
                 {
-                    backgroundColor: "#38a9e4",
+                    backgroundColor: "#17A2B8",
                     data: data,
                 }
             ]
@@ -55,7 +55,7 @@ function createLineChart(labels, data, options) {
             labels: labels,
             datasets: [
                 {
-                    borderColor: "#38a9e4",
+                    borderColor: "#17A2B8",
                     data: data,
                     fill: false
                 },
