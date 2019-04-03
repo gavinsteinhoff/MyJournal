@@ -2,6 +2,7 @@
 @using Newtonsoft.Json
 @{
     ViewData["Title"] = "Index";
+    ViewBag.HomeActive = "active";
 }
 
 
@@ -97,54 +98,46 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     @*<script>
-        let neededHeight = ($('body').height() - $('.navbar').height()) - $('footer').height();
-        $('.sideMenuLink').css('height', neededHeight);
-    </script>*@
+            let neededHeight = ($('body').height() - $('.navbar').height()) - $('footer').height();
+            $('.sideMenuLink').css('height', neededHeight);
+        </script>*@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
+
+
+    @{
+        List<double> moodByMonth = new List<double>();
+        List<double> sleepByMonth = new List<double>();
+        List<double> workOutByMonth = new List<double>();
+        foreach (var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Month)).Distinct().ToList()))
+        {
+            moodByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.UserMood));
+            sleepByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.HoursSlept));
+            workOutByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.MinExercising));
+        }
+        List<int> moodByCount = new List<int>();
+        moodByCount.Add(Model.Count(x => x.UserMood == 1));
+        moodByCount.Add(Model.Count(x => x.UserMood == 2));
+        moodByCount.Add(Model.Count(x => x.UserMood == 3));
+        moodByCount.Add(Model.Count(x => x.UserMood == 4));
+        moodByCount.Add(Model.Count(x => x.UserMood == 5));
+    }
+
+
     <script>
-
-        let global = {
-            chartName: "myChart",
-            time: "day"
-        }
-
-        let dateLabels;
-
-        function moodGraph(time) {
-            let options = {
-                scales: {
-                    yAxes: [{
-                        display: true,
-                        ticks: {
-                            suggestedMin: 0,
-                            stepSize: 1
-                        }
-                    }]
-                },
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Daily Mood'
-                }
-            }
-            if (time == "month") {
-                @{
-                    List<double> moodByMonth = new List<double>();
-                    foreach(var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Month)).Distinct().ToList()))
-                    {
-                        moodByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.UserMood));
-                    }
-                }
-                preGraph(3, dateLabels, JSON.parse('@Html.Raw(JsonConvert.SerializeObject(moodByMonth))'), options);
-            } else {
-                preGraph(1,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.UserMood).ToList()))'), options);
-            }
-        }
-
         $(document).ready(function () {
+            ChangeLinkType('@ViewBag.curr');
+
+            global.moodByMonth =    JSON.parse('@Html.Raw(JsonConvert.SerializeObject(moodByMonth))');
+            global.sleepByMonth =   JSON.parse('@Html.Raw(JsonConvert.SerializeObject(sleepByMonth))');
+            global.workOutByMonth = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(workOutByMonth))');
+            global.moodByDay =      JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.UserMood).ToList()))');
+            global.sleepByDay =     JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.HoursSlept).ToList()))');
+            global.workOutByDay =   JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.MinExercising).ToList()))');
+
+            global.moodByCount =   @Html.Raw(JsonConvert.SerializeObject(moodByCount));
+
             if ("@ViewBag.Active7" == 'active' || "@ViewBag.Active30" == 'active') {
                 Graph("day",'@ViewBag.curr');
             } else {
@@ -155,9 +148,9 @@
 
         function Graph(time,type) {
             if (time == "day") {
-                dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList()))')
+                global.dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList()))')
             } else {
-                dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.DailyInformationDateTime.Month) + " " + x.DailyInformationDateTime.Year).Distinct().ToList()))')
+                global.dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.DailyInformationDateTime.Month) + " " + x.DailyInformationDateTime.Year).Distinct().ToList()))')
             }
             switch (type) {
                 case "mood":
@@ -178,119 +171,5 @@
                     break;
             }
         }
-
-        function AverageMoodGraph() {
-            let options= {
-                title: {
-                    display: true,
-                    text: 'Number of Moods'
-                }
-            }
-            @{
-                List<int> mood = new List<int>();
-                mood.Add(Model.Count(x => x.UserMood == 1));
-                mood.Add(Model.Count(x => x.UserMood == 2));
-                mood.Add(Model.Count(x => x.UserMood == 3));
-                mood.Add(Model.Count(x => x.UserMood == 4));
-                mood.Add(Model.Count(x => x.UserMood == 5));
-            }
-            preGraph(2, ["Mood: 1", "Mood: 2", "Mood: 3", "Mood: 4", "Mood: 5"],@Html.Raw(JsonConvert.SerializeObject(mood)), options);
-        }
-
-        function WorkingOutGraph(time) {
-            let options = {
-                scales: {
-                    yAxes: [{
-                        display: true,
-                        ticks: {
-                            suggestedMin: 0,
-                            stepSize: 15
-                        }
-                    }]
-                },
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Minutes Working Out a Day'
-                }
-            }
-            if (time == "month") {
-                @{
-                    List<double> workoutByMonth = new List<double>();
-                    foreach(var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Month)).Distinct().ToList()))
-                    {
-                        workoutByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.MinExercising));
-                    }
-                }
-                preGraph(3, dateLabels, JSON.parse('@Html.Raw(JsonConvert.SerializeObject(workoutByMonth))'), options);
-            } else {
-                preGraph(1,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.MinExercising).ToList()))'), options);
-            }
-        }
-
-        function SleepGraph(time) {
-             let options = {
-                scales: {
-                    yAxes: [{
-                        display: true,
-                        ticks: {
-                            suggestedMin: 0,
-                            stepSize: 1
-                        }
-                    }]
-                },
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Hours of Sleep a Day'
-                }
-            }
-            if (time == "month") {
-                @{
-                    List<double> sleepByMonth = new List<double>();
-                    foreach(var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Month)).Distinct().ToList()))
-                    {
-                        sleepByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.HoursSlept));
-                    }
-                }
-                preGraph(3, dateLabels, JSON.parse('@Html.Raw(JsonConvert.SerializeObject(sleepByMonth))'), options);
-            } else {
-                preGraph(1,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.HoursSlept).ToList()))'), options);
-            }
-        }
-
-        function ChangeLinkType(type) {
-            $(".page-item a").attr("href")
-            $(".page-item a").each(function () {
-                var $this = $(this);
-                var _href = $this.attr("href");
-                $this.attr("href", _href.split("&")[0] + '&curr=' + type);
-            });
-
-        }
-
-        $("#mood").click(function () {
-            ChangeLinkType("mood");
-            Graph(global.time,"mood");
-        });
-
-        $("#overalMood").click(function () {
-            ChangeLinkType("averageMood");
-            AverageMoodGraph();
-        });
-
-        $("#workingOut").click(function () {
-            ChangeLinkType("workingOut");
-            WorkingOutGraph(global.time);
-        });
-
-        $("#sleep").click(function () {
-            ChangeLinkType("sleep");
-            SleepGraph(global.time);
-        });
     </script>
 }
