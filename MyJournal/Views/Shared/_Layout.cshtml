@@ -28,23 +28,30 @@
         </button>
         <div class="navbar-collapse collapse" id="collapsingNavbar">
             <ul class="navbar-nav">
-                <li class="nav-item active">
+                <li class="nav-item @Html.Raw(ViewBag.HomeActive)">
                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
                         Home
-                        <span class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                <li class="nav-item @Html.Raw(ViewBag.AboutActive)">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">
+                        About
+                    </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
+                <li class="nav-item @Html.Raw(ViewBag.ContactActive)">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">
+                        Contact
+                    </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Sharings" asp-action="Index">Sharing Center</a>
+                <li class="nav-item @Html.Raw(ViewBag.ShareActive)">
+                    <a class="nav-link" asp-area="" asp-controller="Sharings" asp-action="Index">
+                        Sharing Center
+                    </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Aggregate">Global Reports</a>
+                <li class="nav-item @Html.Raw(ViewBag.AggregateActive)">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Aggregate">
+                        Global Reports
+                    </a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
