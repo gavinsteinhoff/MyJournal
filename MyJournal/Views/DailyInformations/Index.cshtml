@@ -96,16 +96,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-    @*<script>
-            let neededHeight = ($('body').height() - $('.navbar').height()) - $('footer').height();
-            $('.sideMenuLink').css('height', neededHeight);
-        </script>*@
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-
-
-
     @{
         List<double> moodByMonth = new List<double>();
         List<double> sleepByMonth = new List<double>();
@@ -123,8 +114,6 @@
         moodByCount.Add(Model.Count(x => x.UserMood == 4));
         moodByCount.Add(Model.Count(x => x.UserMood == 5));
     }
-
-
     <script>
         $(document).ready(function () {
             ChangeLinkType('@ViewBag.curr');

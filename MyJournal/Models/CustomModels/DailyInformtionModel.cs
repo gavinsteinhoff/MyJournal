@@ -27,6 +27,7 @@ namespace MyJournal.Models.CustomModels
         public string Title { get; set; }
 
         [Required]
+        [Display(Name = "Journal Entry")]
         public string JournalText {get;set;}
 
         [DataType(DataType.DateTime)]
