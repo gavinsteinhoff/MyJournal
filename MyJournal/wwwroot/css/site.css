@@ -6,3 +6,12 @@
 .bg-info--50 {
     background-color: rgba(23,162,184,.5)
 }
+
+.page-link {
+    color: rgba(23,162,184,1);
+}
+
+.page-item.active .page-link {
+    background-color: rgba(23,162,184,1);
+    border-color: rgba(23,162,184,1);
+}
