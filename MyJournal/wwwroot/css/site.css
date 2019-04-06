@@ -2,3 +2,7 @@
     height: 100%;
 }
 
+
+.bg-info--50 {
+    background-color: rgba(23,162,184,.5)
+}
