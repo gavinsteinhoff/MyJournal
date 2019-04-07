@@ -43,7 +43,9 @@ namespace MyJournal
 
             // Add application services.
             services.AddAuthentication()
-                .AddGoogle(googleOptions => { googleOptions.ClientId = Configuration["Authentication:Google:ClientId"]; googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"]; });
+                .AddGoogle(googleOptions => { googleOptions.ClientId = Configuration["Authentication:Google:ClientId"]; googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"]; })
+                .AddFacebook(fb => {fb.ClientId = Configuration["Authentication:Facebook:AppId"]; fb.ClientSecret = Configuration["Authentication:Facebook:AppSecret"]; });
+    
 
             services.AddTransient<IEmailSender, EmailSender>();
 
