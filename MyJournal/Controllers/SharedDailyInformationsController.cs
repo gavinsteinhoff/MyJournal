@@ -24,7 +24,12 @@ namespace MyJournal.Controllers
         // GET: SharedDailyInformations
         public async Task<IActionResult> Index(string giverName)
         {
-            return View(await _context.DailyInformations.Where(x => x.User == giverName).ToListAsync());
+            var sharings = _context.Sharings.FirstOrDefault(x => x.Giver == giverName);
+            if (sharings != null && sharings.Receiver == User.Identity.Name) 
+            {
+                return View(await _context.DailyInformations.Where(x => x.User == giverName).ToListAsync());
+            }
+            return View();
         }
 
         // GET: SharedDailyInformations/Details/5
@@ -39,7 +44,7 @@ namespace MyJournal.Controllers
                 .SingleOrDefaultAsync(m => m.DailyInformationID == id);
 
             var auth = _context.Sharings.FirstOrDefault(x => x.Giver == dailyInformation.User && x.Receiver == User.Identity.Name);
-            
+
             if (dailyInformation == null || auth == null)
             {
                 return NotFound();
