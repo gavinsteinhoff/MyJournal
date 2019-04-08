@@ -140,8 +140,8 @@ namespace MyJournal.Controllers
             {
                 string errorText = string.Empty;
                 #region WatsonApiCode
-                WatsonToneApi.WatsonToneApi toneApi = new WatsonToneApi.WatsonToneApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
-                var anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
+                Services.WatsonApi toneApi = new Services.WatsonApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
+                Services.WatsonApiResponse anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
                 if (!anaylzedText.Error)
                 {
                     ApiData apiData = new ApiData();
@@ -183,7 +183,7 @@ namespace MyJournal.Controllers
                 }
                 else
                 {
-                    errorText = anaylzedText.ErrorString + "Form still submited.";
+                    errorText = anaylzedText.ErrorText + "Form still submited.";
                 }
                 #endregion
 
