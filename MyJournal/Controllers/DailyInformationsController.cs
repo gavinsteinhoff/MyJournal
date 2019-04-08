@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MyJournal.Data;
 using MyJournal.Models.CustomModels;
 
@@ -15,12 +16,13 @@ namespace MyJournal.Controllers
     public class DailyInformationsController : Controller
     {
         private readonly MyJournalContext _context;
-
-        public DailyInformationsController(MyJournalContext context)
+        private readonly IConfiguration _configuration;
+        public DailyInformationsController(MyJournalContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
-        
+
         // Custom Methods
 
         /// <summary>
@@ -43,11 +45,47 @@ namespace MyJournal.Controllers
         }
         //End Custom
 
+        public ActionResult test(int? id)
+        {
+            string errorText = "";
+
+            var dailyInformtion = _context.DailyInformations
+                .Include(c => c.ApiData)
+                .Include(c => c.ApiData.DocumentTones)
+                    .ThenInclude(dt => dt.Tones)
+                .Include(c => c.ApiData.SentenceTones)
+                    .ThenInclude(st => st.Tones)
+                .SingleOrDefault(m => m.DailyInformationID == id);
+
+            foreach (var dt in dailyInformtion.ApiData.DocumentTones)
+            {
+                foreach (var t in dt.Tones)
+                {
+                    errorText += t.ToneName + " " + t.Score;
+                    errorText += "</br>";
+                }
+            }
+            errorText += "<hr>";
+            foreach (var st in dailyInformtion.ApiData.SentenceTones)
+            {
+                errorText += st.Text + "</br>";
+                foreach (var t in st.Tones)
+                {
+                    errorText += t.ToneName + " " + t.Score;
+                    errorText += "</br>";
+                }
+                errorText += "<hr>";
+            }
+
+            return Content(errorText,"text/html");
+        }
+
         // GET: DailyInformtions
-        public async Task<IActionResult> Index(int? daysOld = 30, string curr = "mood")
+        public async Task<IActionResult> Index(int? daysOld = 30, string curr = "mood", string error = "")
         {
             ViewBag.curr = curr;
-            switch(daysOld)
+            ViewBag.error = error;
+            switch (daysOld)
             {
                 case 7:
                     ViewBag.Active7 = "active";
@@ -100,14 +138,64 @@ namespace MyJournal.Controllers
         {
             if (ModelState.IsValid)
             {
+                string errorText = string.Empty;
+                #region WatsonApiCode
+                WatsonToneApi.WatsonToneApi toneApi = new WatsonToneApi.WatsonToneApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
+                var anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
+                if (!anaylzedText.Error)
+                {
+                    ApiData apiData = new ApiData();
+                    apiData.DocumentTones = new List<ApiData.DocumentTone>();
+                    apiData.SentenceTones = new List<ApiData.SentenceTone>();
+
+                    foreach (var tone in anaylzedText.DocumentTone.Tones)
+                    {
+                        ApiData.DocumentTone dt = new ApiData.DocumentTone();
+                        List<ApiData.Tone> dtTone = new List<ApiData.Tone>();
+                        dtTone.Add(new ApiData.Tone
+                        {
+                            Score = tone.Score,
+                            ToneName = tone.ToneName
+                        });
+                        dt.Tones = dtTone;
+                        apiData.DocumentTones.Add(dt);
+                    }
+
+                    foreach (var sentence in anaylzedText.SentencesTone)
+                    {
+                        ApiData.SentenceTone st = new ApiData.SentenceTone();
+                        st.Text = sentence.Text;
+                        List<ApiData.Tone> stTone = new List<ApiData.Tone>();
+                        foreach (var tone in sentence.Tones)
+                        {
+                            stTone.Add(new ApiData.Tone
+                            {
+                                Score = tone.Score,
+                                ToneName = tone.ToneName
+                            });
+                        }
+                        st.Tones = stTone;
+                        apiData.SentenceTones.Add(st);
+                    }
+
+                    _context.Add(apiData);
+                    dailyInformtion.ApiData = apiData;
+                }
+                else
+                {
+                    errorText = anaylzedText.ErrorString + "Form still submited.";
+                }
+                #endregion
+
                 dailyInformtion.User = User.Identity.Name;
                 dailyInformtion.DailyInformationDateTime = DateTime.Now;
                 _context.Add(dailyInformtion);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { error = errorText });
             }
             return View(dailyInformtion);
         }
+
 
         // GET: DailyInformtions/Edit/5
         public async Task<IActionResult> Edit(int? id)

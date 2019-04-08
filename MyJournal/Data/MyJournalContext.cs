@@ -17,5 +17,8 @@ namespace MyJournal.Data
         public DbSet<DailyInformation> DailyInformations { get; set; }
         public DbSet<CustomTemplates> CustomTemplates { get; set; }
         public DbSet<Sharing> Sharings { get; set; }
+        public DbSet<ApiData> ApiDatas { get; set; }
+
+
     }
 }

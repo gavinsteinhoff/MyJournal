@@ -11,9 +11,10 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(MyJournalContext))]
-    partial class MyJournalContextModelSnapshot : ModelSnapshot
+    [Migration("20190408070357_lastone")]
+    partial class lastone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,6 +67,8 @@ namespace MyJournal.Migrations
                     b.Property<int>("ToneID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("ApiDataID");
+
                     b.Property<int?>("DocumentToneID");
 
                     b.Property<double>("Score");
@@ -75,6 +78,8 @@ namespace MyJournal.Migrations
                     b.Property<string>("ToneName");
 
                     b.HasKey("ToneID");
+
+                    b.HasIndex("ApiDataID");
 
                     b.HasIndex("DocumentToneID");
 
@@ -186,6 +191,10 @@ namespace MyJournal.Migrations
 
             modelBuilder.Entity("MyJournal.Models.CustomModels.ApiData+Tone", b =>
                 {
+                    b.HasOne("MyJournal.Models.CustomModels.ApiData")
+                        .WithMany("Tones")
+                        .HasForeignKey("ApiDataID");
+
                     b.HasOne("MyJournal.Models.CustomModels.ApiData+DocumentTone")
                         .WithMany("Tones")
                         .HasForeignKey("DocumentToneID");

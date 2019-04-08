@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using SendGrid;
-using SendGrid.Helpers.Mail;
-using Microsoft.AspNetCore.Identity;
-
+﻿using System.Threading.Tasks;
 
 namespace MyJournal.Services
 {
@@ -28,26 +20,26 @@ namespace MyJournal.Services
 
         public async Task Execute(string apiKey, string subject, string message, string email)
         {
-             var client = new SendGrid.SendGridClient(apiKey);
-              var msg = new SendGrid.Helpers.Mail.SendGridMessage()
-              {
-                   From = new SendGrid.Helpers.Mail.EmailAddress("donutreply@myjournal.co.uk", "My Journal Verification"),
-                  Subject = subject,
-                  PlainTextContent = message,
-                 HtmlContent = message
-              };
-               msg.AddTo(new SendGrid.Helpers.Mail.EmailAddress(email));
-              var result = await client.SendEmailAsync(msg);
-               //if (result.StatusCode != System.Net.HttpStatusCode.OK)
-               //{
-           // #if DEBUG
+            var client = new SendGrid.SendGridClient(apiKey);
+            var msg = new SendGrid.Helpers.Mail.SendGridMessage()
+            {
+                From = new SendGrid.Helpers.Mail.EmailAddress("donutreply@myjournal.co.uk", "My Journal Verification"),
+                Subject = subject,
+                PlainTextContent = message,
+                HtmlContent = message
+            };
+            msg.AddTo(new SendGrid.Helpers.Mail.EmailAddress(email));
+            var result = await client.SendEmailAsync(msg);
+            //if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            //{
+            // #if DEBUG
             // var error = await result.Body.ReadAsStringAsync();
             //               throw new Exception(error);
-           // #else
+            // #else
             //	throw new Exception("Unable to send email!");
             //#endif
-               // } 
-            
+            // } 
+
         }
     }
 }
