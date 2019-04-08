@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MyJournal.Data;
 using MyJournal.Models.CustomModels;
 
@@ -15,12 +16,13 @@ namespace MyJournal.Controllers
     public class DailyInformationsController : Controller
     {
         private readonly MyJournalContext _context;
-
-        public DailyInformationsController(MyJournalContext context)
+        private readonly IConfiguration _configuration;
+        public DailyInformationsController(MyJournalContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
-        
+
         // Custom Methods
 
         /// <summary>
@@ -100,6 +102,18 @@ namespace MyJournal.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Watson API
+                WatsonToneApi.WatsonToneApi toneApi = new WatsonToneApi.WatsonToneApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
+                var anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
+                if (!anaylzedText.Error)
+                {
+
+                } else
+                {
+
+                }
+                //End Watson API
+
                 dailyInformtion.User = User.Identity.Name;
                 dailyInformtion.DailyInformationDateTime = DateTime.Now;
                 _context.Add(dailyInformtion);
@@ -108,6 +122,7 @@ namespace MyJournal.Controllers
             }
             return View(dailyInformtion);
         }
+
 
         // GET: DailyInformtions/Edit/5
         public async Task<IActionResult> Edit(int? id)
