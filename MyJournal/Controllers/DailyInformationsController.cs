@@ -45,30 +45,65 @@ namespace MyJournal.Controllers
         }
         //End Custom
 
-        public IActionResult test()
+        public ActionResult test(int? id)
         {
-            //var dailyInformtion =  _context.DailyInformations.SingleOrDefault(m => m.DailyInformationID == 1262);
+            string output = "";
 
-            string errorText = string.Empty;
+            var dailyInformtion = _context.DailyInformations.SingleOrDefault(m => m.DailyInformationID == id);
 
-            errorText = dailyInformtion.ApiData.ApiDataID.ToString();
+            var x = dailyInformtion;
             //Watson API
             WatsonToneApi.WatsonToneApi toneApi = new WatsonToneApi.WatsonToneApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
             var anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
             if (!anaylzedText.Error)
             {
                 ApiData apiData = new ApiData();
+                apiData.DocumentTones = new List<ApiData.DocumentTone>();
+                apiData.SentenceTones = new List<ApiData.SentenceTone>();
 
+                foreach (var tone in anaylzedText.DocumentTone.Tones)
+                {
+                    ApiData.DocumentTone dt = new ApiData.DocumentTone();
+                    List<ApiData.Tone> dtTone = new List<ApiData.Tone>();
+                    dtTone.Add(new ApiData.Tone
+                    {
+                        Score = tone.Score,
+                        ToneName = tone.ToneName
+                    });
+                    dt.Tones = dtTone;
+                    apiData.DocumentTones.Add(dt);
+                }
+
+                foreach (var sentence in anaylzedText.SentencesTone)
+                {
+                    ApiData.SentenceTone st = new ApiData.SentenceTone();
+                    st.Text = sentence.Text;
+                    List<ApiData.Tone> stTone = new List<ApiData.Tone>();
+                    foreach (var tone in sentence.Tones)
+                    {
+                        stTone.Add(new ApiData.Tone
+                        {
+                            Score = tone.Score,
+                            ToneName = tone.ToneName
+                        });
+                    }
+                    st.Tones = stTone;
+                    apiData.SentenceTones.Add(st);
+                }
+
+                apiData.DailyInformationID = dailyInformtion.DailyInformationID;
+                apiData.ApiDataID = dailyInformtion.DailyInformationID;
+                _context.Add(apiData);
                 dailyInformtion.ApiData = apiData;
-                _context.SaveChanges();
             }
             else
             {
-                errorText = anaylzedText.ErrorString + "Form still submited.";
+
             }
             //End Watson API
+            //_context.SaveChanges();
 
-            return RedirectToAction("Index", new { error = errorText });
+            return Content(output);
         }
 
         // GET: DailyInformtions
@@ -135,7 +170,42 @@ namespace MyJournal.Controllers
                 var anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
                 if (!anaylzedText.Error)
                 {
+                    ApiData apiData = new ApiData();
+                    apiData.DocumentTones = new List<ApiData.DocumentTone>();
+                    apiData.SentenceTones = new List<ApiData.SentenceTone>();
 
+                    foreach (var tone in anaylzedText.DocumentTone.Tones)
+                    {
+                        ApiData.DocumentTone dt = new ApiData.DocumentTone();
+                        List<ApiData.Tone> dtTone = new List<ApiData.Tone>();
+                        dtTone.Add(new ApiData.Tone
+                        {
+                            Score = tone.Score,
+                            ToneName = tone.ToneName
+                        });
+                        dt.Tones = dtTone;
+                        apiData.DocumentTones.Add(dt);
+                    }
+
+                    foreach (var sentence in anaylzedText.SentencesTone)
+                    {
+                        ApiData.SentenceTone st = new ApiData.SentenceTone();
+                        st.Text = sentence.Text;
+                        List<ApiData.Tone> stTone = new List<ApiData.Tone>();
+                        foreach (var tone in sentence.Tones)
+                        {
+                            stTone.Add(new ApiData.Tone
+                            {
+                                Score = tone.Score,
+                                ToneName = tone.ToneName
+                            });
+                        }
+                        st.Tones = stTone;
+                        apiData.SentenceTones.Add(st);
+                    }
+
+                    _context.Add(apiData);
+                    dailyInformtion.ApiData = apiData;
                 }
                 else
                 {
