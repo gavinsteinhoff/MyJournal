@@ -2,21 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyJournal.Data;
+using MyJournal.Models;
 using MyJournal.Models.CustomModels;
+using MyJournal.Services;
 
 namespace MyJournal.Controllers
 {
+    [Authorize]
     public class SharingsController : Controller
     {
         private readonly MyJournalContext _context;
+        private readonly IEmailSender _emailSender;
 
-        public SharingsController(MyJournalContext context)
+
+        public SharingsController(MyJournalContext context, IEmailSender emailSender)
         {
             _context = context;
+            _emailSender = emailSender;
         }
 
         public bool CheckAuth(Sharing sharing)
@@ -27,7 +35,7 @@ namespace MyJournal.Controllers
             }
             return false;
         }
-        
+
 
         // GET: Sharings
         public async Task<IActionResult> Index()
@@ -68,6 +76,12 @@ namespace MyJournal.Controllers
         {
             if (ModelState.IsValid)
             {
+                string link = "<a href='https://mydailyjournal.azurewebsites.net/Sharings'>link</a>";
+                string msg = $"{sharing.Giver} has shared their My Journal with you. \nHere is their link: {link}";
+                await _emailSender.SendEmailAsync(sharing.Receiver, "Someone shared with you on My Journal", msg);
+                msg = $"You have shared your MyJournal with {sharing.Receiver}\nIf this was not you, you can remove it here: {link}\nAlso you will need to reset your password";
+                await _emailSender.SendEmailAsync(sharing.Giver, "You Shared with Someone on My Journal", msg);
+
                 sharing.Giver = User.Identity.Name;
                 _context.Add(sharing);
                 await _context.SaveChangesAsync();
