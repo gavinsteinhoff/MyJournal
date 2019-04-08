@@ -49,77 +49,35 @@ namespace MyJournal.Controllers
         {
             string errorText = "";
 
-            var dailyInformtion = _context.DailyInformations.Include(c => c.ApiData).Include(c => c.ApiData.DocumentTones).Include(c => c.ApiData.SentenceTones).Include(c => c.ApiData.SentenceTones).SingleOrDefault(m => m.DailyInformationID == id);
+            var dailyInformtion = _context.DailyInformations
+                .Include(c => c.ApiData)
+                .Include(c => c.ApiData.DocumentTones)
+                    .ThenInclude(dt => dt.Tones)
+                .Include(c => c.ApiData.SentenceTones)
+                    .ThenInclude(st => st.Tones)
+                .SingleOrDefault(m => m.DailyInformationID == id);
 
-            //foreach (var dt in dailyInformtion.ApiData.DocumentTones)
-            //{
-            //    foreach (var t in dt.Tones)
-            //    {
-            //        errorText += t.ToneName + " " + t.Score;
-            //        errorText += "</br>";
-            //    }
-            //}
-            //foreach (var st in dailyInformtion.ApiData.SentenceTones)
-            //{
-            //    errorText += st.Text + "</br>";
-            //    foreach (var t in st.Tones)
-            //    {
-            //        errorText += t.ToneName + " " + t.Score;
-            //        errorText += "</br>";
-            //    }
-            //    errorText += "<hr>";
-            //}
-
-            #region WatsonApiCode
-            WatsonToneApi.WatsonToneApi toneApi = new WatsonToneApi.WatsonToneApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
-            var anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
-            if (!anaylzedText.Error)
+            foreach (var dt in dailyInformtion.ApiData.DocumentTones)
             {
-                ApiData apiData = new ApiData();
-                apiData.DocumentTones = new List<ApiData.DocumentTone>();
-                apiData.SentenceTones = new List<ApiData.SentenceTone>();
-
-                foreach (var tone in anaylzedText.DocumentTone.Tones)
+                foreach (var t in dt.Tones)
                 {
-                    ApiData.DocumentTone dt = new ApiData.DocumentTone();
-                    List<ApiData.Tone> dtTone = new List<ApiData.Tone>();
-                    dtTone.Add(new ApiData.Tone
-                    {
-                        Score = tone.Score,
-                        ToneName = tone.ToneName
-                    });
-                    dt.Tones = dtTone;
-                    apiData.DocumentTones.Add(dt);
+                    errorText += t.ToneName + " " + t.Score;
+                    errorText += "</br>";
                 }
-
-                foreach (var sentence in anaylzedText.SentencesTone)
-                {
-                    ApiData.SentenceTone st = new ApiData.SentenceTone();
-                    st.Text = sentence.Text;
-                    List<ApiData.Tone> stTone = new List<ApiData.Tone>();
-                    foreach (var tone in sentence.Tones)
-                    {
-                        stTone.Add(new ApiData.Tone
-                        {
-                            Score = tone.Score,
-                            ToneName = tone.ToneName
-                        });
-                    }
-                    st.Tones = stTone;
-                    apiData.SentenceTones.Add(st);
-                }
-
-                _context.Add(apiData);
-                dailyInformtion.ApiData = apiData;
             }
-            else
+            errorText += "<hr>";
+            foreach (var st in dailyInformtion.ApiData.SentenceTones)
             {
-                errorText = anaylzedText.ErrorString + "Form still submited.";
+                errorText += st.Text + "</br>";
+                foreach (var t in st.Tones)
+                {
+                    errorText += t.ToneName + " " + t.Score;
+                    errorText += "</br>";
+                }
+                errorText += "<hr>";
             }
-            #endregion
-            //_context.SaveChanges();
 
-            return Content(errorText);
+            return Content(errorText,"text/html");
         }
 
         // GET: DailyInformtions

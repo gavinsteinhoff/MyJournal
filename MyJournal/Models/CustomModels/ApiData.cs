@@ -20,19 +20,23 @@ namespace MyJournal.Models.CustomModels
             public int ToneID { get; set; }
             public string ToneName { get; set; }
             public double Score { get; set; }
+            public int? DocumentToneID { get; set; }
+            public DocumentTone DocumentTone { get; set; }
+            public int? SentenceToneID { get; set; }
+
         }
 
         public class DocumentTone
         {
             public int DocumentToneID { get; set; }
-            public ICollection<Tone> Tones { get; set; }
+            public List<Tone> Tones { get; set; }
         }
 
         public class SentenceTone
         {
             public int SentenceToneID { get; set; }
             public string Text { get; set; }
-            public ICollection<Tone> Tones { get; set; }
+            public virtual ICollection<Tone> Tones { get; set; }
         }
 
     }
