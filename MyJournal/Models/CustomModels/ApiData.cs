@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace MyJournal.Models.CustomModels
+{
+    public class ApiData
+    {
+        [ForeignKey("DailyInformation")]
+        public int ApiDataID { get; set; }
+        public int DailyInformationID { get; set; }
+        public  DailyInformation DailyInformation { get; set; }
+        public ICollection<DocumentTone> DocumentTones { get; set; }
+        public ICollection<SentenceTone> SentenceTones { get; set; }
+
+        public class Tone
+        {
+            public int ToneID { get; set; }
+            public string ToneName { get; set; }
+            public double Score { get; set; }
+        }
+
+        public class DocumentTone
+        {
+            public int DocumentToneID { get; set; }
+            public ICollection<Tone> Tones { get; set; }
+        }
+
+        public class SentenceTone
+        {
+            public int SentenceToneID { get; set; }
+            public string Text { get; set; }
+            public ICollection<Tone> Tones { get; set; }
+        }
+
+    }
+}

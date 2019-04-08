@@ -45,9 +45,30 @@ namespace MyJournal.Controllers
         }
         //End Custom
 
-        public IActionResult testError()
+        public IActionResult test()
         {
-            return RedirectToAction("Index", new { error = "lots of errors" });
+            //var dailyInformtion =  _context.DailyInformations.SingleOrDefault(m => m.DailyInformationID == 1262);
+
+            string errorText = string.Empty;
+
+            errorText = dailyInformtion.ApiData.ApiDataID.ToString();
+            //Watson API
+            WatsonToneApi.WatsonToneApi toneApi = new WatsonToneApi.WatsonToneApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
+            var anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
+            if (!anaylzedText.Error)
+            {
+                ApiData apiData = new ApiData();
+
+                dailyInformtion.ApiData = apiData;
+                _context.SaveChanges();
+            }
+            else
+            {
+                errorText = anaylzedText.ErrorString + "Form still submited.";
+            }
+            //End Watson API
+
+            return RedirectToAction("Index", new { error = errorText });
         }
 
         // GET: DailyInformtions

@@ -11,9 +11,10 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(MyJournalContext))]
-    partial class MyJournalContextModelSnapshot : ModelSnapshot
+    [Migration("20190408045420_changedToBetter")]
+    partial class changedToBetter
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,9 +23,10 @@ namespace MyJournal.Migrations
 
             modelBuilder.Entity("MyJournal.Models.CustomModels.ApiData", b =>
                 {
-                    b.Property<int>("ApiDataID");
+                    b.Property<int>("ApiDataID")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("DailyInformationID");
+                    b.Property<int>("DailyInformationModel");
 
                     b.HasKey("ApiDataID");
 
@@ -160,14 +162,6 @@ namespace MyJournal.Migrations
                     b.HasKey("SharingKey");
 
                     b.ToTable("Sharings");
-                });
-
-            modelBuilder.Entity("MyJournal.Models.CustomModels.ApiData", b =>
-                {
-                    b.HasOne("MyJournal.Models.CustomModels.DailyInformation", "DailyInformation")
-                        .WithOne("ApiData")
-                        .HasForeignKey("MyJournal.Models.CustomModels.ApiData", "ApiDataID")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MyJournal.Models.CustomModels.ApiData+DocumentTone", b =>

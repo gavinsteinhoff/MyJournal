@@ -86,5 +86,7 @@ namespace MyJournal.Models.CustomModels
         [Display(Name = "How many minutes did you spend on a hobby")]
         public int MinHobby { get; set; }
 
+        public  ApiData ApiData { get; set; }
+
     }
 }
