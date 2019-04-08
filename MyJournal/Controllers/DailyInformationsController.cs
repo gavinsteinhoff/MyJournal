@@ -45,11 +45,17 @@ namespace MyJournal.Controllers
         }
         //End Custom
 
+        public IActionResult testError()
+        {
+            return RedirectToAction("Index", new { error = "lots of errors" });
+        }
+
         // GET: DailyInformtions
-        public async Task<IActionResult> Index(int? daysOld = 30, string curr = "mood")
+        public async Task<IActionResult> Index(int? daysOld = 30, string curr = "mood", string error = "")
         {
             ViewBag.curr = curr;
-            switch(daysOld)
+            ViewBag.error = error;
+            switch (daysOld)
             {
                 case 7:
                     ViewBag.Active7 = "active";
@@ -102,15 +108,17 @@ namespace MyJournal.Controllers
         {
             if (ModelState.IsValid)
             {
+                string errorText = string.Empty;
                 //Watson API
                 WatsonToneApi.WatsonToneApi toneApi = new WatsonToneApi.WatsonToneApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
                 var anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
                 if (!anaylzedText.Error)
                 {
 
-                } else
+                }
+                else
                 {
-
+                    errorText = anaylzedText.ErrorString + "Form still submited.";
                 }
                 //End Watson API
 
@@ -118,7 +126,7 @@ namespace MyJournal.Controllers
                 dailyInformtion.DailyInformationDateTime = DateTime.Now;
                 _context.Add(dailyInformtion);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { error = errorText });
             }
             return View(dailyInformtion);
         }
