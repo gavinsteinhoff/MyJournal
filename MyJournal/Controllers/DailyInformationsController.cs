@@ -47,12 +47,30 @@ namespace MyJournal.Controllers
 
         public ActionResult test(int? id)
         {
-            string output = "";
+            string errorText = "";
 
-            var dailyInformtion = _context.DailyInformations.SingleOrDefault(m => m.DailyInformationID == id);
+            var dailyInformtion = _context.DailyInformations.Include(c => c.ApiData).Include(c => c.ApiData.DocumentTones).Include(c => c.ApiData.SentenceTones).Include(c => c.ApiData.SentenceTones).SingleOrDefault(m => m.DailyInformationID == id);
 
-            var x = dailyInformtion;
-            //Watson API
+            //foreach (var dt in dailyInformtion.ApiData.DocumentTones)
+            //{
+            //    foreach (var t in dt.Tones)
+            //    {
+            //        errorText += t.ToneName + " " + t.Score;
+            //        errorText += "</br>";
+            //    }
+            //}
+            //foreach (var st in dailyInformtion.ApiData.SentenceTones)
+            //{
+            //    errorText += st.Text + "</br>";
+            //    foreach (var t in st.Tones)
+            //    {
+            //        errorText += t.ToneName + " " + t.Score;
+            //        errorText += "</br>";
+            //    }
+            //    errorText += "<hr>";
+            //}
+
+            #region WatsonApiCode
             WatsonToneApi.WatsonToneApi toneApi = new WatsonToneApi.WatsonToneApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
             var anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
             if (!anaylzedText.Error)
@@ -91,19 +109,17 @@ namespace MyJournal.Controllers
                     apiData.SentenceTones.Add(st);
                 }
 
-                apiData.DailyInformationID = dailyInformtion.DailyInformationID;
-                apiData.ApiDataID = dailyInformtion.DailyInformationID;
                 _context.Add(apiData);
                 dailyInformtion.ApiData = apiData;
             }
             else
             {
-
+                errorText = anaylzedText.ErrorString + "Form still submited.";
             }
-            //End Watson API
+            #endregion
             //_context.SaveChanges();
 
-            return Content(output);
+            return Content(errorText);
         }
 
         // GET: DailyInformtions
@@ -165,7 +181,7 @@ namespace MyJournal.Controllers
             if (ModelState.IsValid)
             {
                 string errorText = string.Empty;
-                //Watson API
+                #region WatsonApiCode
                 WatsonToneApi.WatsonToneApi toneApi = new WatsonToneApi.WatsonToneApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
                 var anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
                 if (!anaylzedText.Error)
@@ -211,7 +227,7 @@ namespace MyJournal.Controllers
                 {
                     errorText = anaylzedText.ErrorString + "Form still submited.";
                 }
-                //End Watson API
+                #endregion
 
                 dailyInformtion.User = User.Identity.Name;
                 dailyInformtion.DailyInformationDateTime = DateTime.Now;
