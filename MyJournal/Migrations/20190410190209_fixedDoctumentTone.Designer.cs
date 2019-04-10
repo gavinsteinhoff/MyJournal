@@ -11,9 +11,10 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(MyJournalContext))]
-    partial class MyJournalContextModelSnapshot : ModelSnapshot
+    [Migration("20190410190209_fixedDoctumentTone")]
+    partial class fixedDoctumentTone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

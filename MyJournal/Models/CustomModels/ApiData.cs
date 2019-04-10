@@ -12,7 +12,7 @@ namespace MyJournal.Models.CustomModels
         public int ApiDataID { get; set; }
         public int DailyInformationID { get; set; }
         public  DailyInformation DailyInformation { get; set; }
-        public ICollection<DocumentTone> DocumentTones { get; set; }
+        public DocumentTone DocumentTones { get; set; }
         public ICollection<SentenceTone> SentenceTones { get; set; }
 
         public class Tone
