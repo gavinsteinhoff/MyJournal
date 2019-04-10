@@ -8,7 +8,7 @@
 
 <div class="row">
 
-
+    
     <div class="col-12 col-md-10 py-2">
 
 
@@ -83,6 +83,7 @@
         }
 
     </div>
+    
 </div>
 
 @section Scripts {
@@ -96,10 +97,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script>
 
-        let global = {
-            chartName: "myChart",
-            time: "day"
-        }
 
         let dateLabels;
 
@@ -133,27 +130,27 @@
             }
             if (time == "month") {
                 @{
-                    List<double> moodByMonth = new List<double>();
+                    List<double> moodByMonth1 = new List<double>();
                     foreach(var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Month)).Distinct().ToList()))
                     {
-                        moodByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.UserMood));
+                        moodByMonth1.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.UserMood));
                     }
                 }
-                preGraph(3, dateLabels, JSON.parse('@Html.Raw(JsonConvert.SerializeObject(moodByMonth))'), options);
+                preGraph(3, dateLabels, JSON.parse('@Html.Raw(JsonConvert.SerializeObject(moodByMonth1))'), options);
             } else {
                 @{
-                    List<double> moodByDay = new List<double>();
+                    List<double> moodByDay1 = new List<double>();
                     foreach(var day in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Day)).Distinct().ToList()))
                     {
-                        moodByDay.Add(Model.Where(x => x.DailyInformationDateTime.Day == day).Average(x => x.UserMood));
+                        moodByDay1.Add(Model.Where(x => x.DailyInformationDateTime.Day == day).Average(x => x.UserMood));
                     }
                 }
-                preGraph(3,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(moodByDay))'), options);
+                preGraph(3,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(moodByDay1))'), options);
             }
         }
 
         $(document).ready(function () {
-            ChangeLinkType(@ViewBag.curr)
+            ChangeLinkType("@ViewBag.curr")
             if ("@ViewBag.Active7" == 'active' || "@ViewBag.Active30" == 'active') {
                 global.time = "day";
                 Graph("day",'@ViewBag.curr');
@@ -232,22 +229,22 @@
             }
             if (time == "month") {
                 @{
-                    List<double> workoutByMonth = new List<double>();
+                    List<double> workoutByMonth1 = new List<double>();
                     foreach(var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Month)).Distinct().ToList()))
                     {
-                        workoutByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.MinExercising));
+                        workoutByMonth1.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.MinExercising));
                     }
                 }
-                preGraph(3, dateLabels, JSON.parse('@Html.Raw(JsonConvert.SerializeObject(workoutByMonth))'), options);
+                preGraph(3, dateLabels, JSON.parse('@Html.Raw(JsonConvert.SerializeObject(workoutByMonth1))'), options);
             } else {
                  @{
-                    List<double> workoutByDay = new List<double>();
+                    List<double> workoutByDay1 = new List<double>();
                     foreach(var day in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Day)).Distinct().ToList()))
                     {
-                        workoutByDay.Add(Model.Where(x => x.DailyInformationDateTime.Day == day).Average(x => x.MinExercising));
+                        workoutByDay1.Add(Model.Where(x => x.DailyInformationDateTime.Day == day).Average(x => x.MinExercising));
                     }
                 }
-                preGraph(3,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(workoutByDay))'), options);
+                preGraph(3,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(workoutByDay1))'), options);
             }
         }
 
@@ -280,22 +277,22 @@
             }
             if (time == "month") {
                 @{
-                    List<double> sleepByMonth = new List<double>();
+                    List<double> sleepByMonth1 = new List<double>();
                     foreach(var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Month)).Distinct().ToList()))
                     {
-                        sleepByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.HoursSlept));
+                        sleepByMonth1.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.HoursSlept));
                     }
                 }
-                preGraph(3, dateLabels, JSON.parse('@Html.Raw(JsonConvert.SerializeObject(sleepByMonth))'), options);
+                preGraph(3, dateLabels, JSON.parse('@Html.Raw(JsonConvert.SerializeObject(sleepByMonth1))'), options);
             } else {
                  @{
-                    List<double> sleepByDay = new List<double>();
+                    List<double> sleepByDay1 = new List<double>();
                     foreach(var day in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Day)).Distinct().ToList()))
                     {
-                        sleepByDay.Add(Model.Where(x => x.DailyInformationDateTime.Day == day).Average(x => x.HoursSlept));
+                        sleepByDay1.Add(Model.Where(x => x.DailyInformationDateTime.Day == day).Average(x => x.HoursSlept));
                     }
                 }
-                preGraph(3,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(sleepByDay))'), options);
+                preGraph(3,dateLabels,JSON.parse('@Html.Raw(JsonConvert.SerializeObject(sleepByDay1))'), options);
             }
         }
 
@@ -309,25 +306,6 @@
 
         }
 
-        $("#mood").click(function () {
-            ChangeLinkType("mood");
-            Graph(global.time,"mood");
-        });
-
-        $("#overalMood").click(function () {
-            ChangeLinkType("averageMood");
-            AverageMoodGraph();
-        });
-
-        $("#workingOut").click(function () {
-            ChangeLinkType("workingOut");
-            WorkingOutGraph(global.time);
-        });
-
-        $("#sleep").click(function () {
-            ChangeLinkType("sleep");
-            SleepGraph(global.time);
-        });
     </script>
 }
 
