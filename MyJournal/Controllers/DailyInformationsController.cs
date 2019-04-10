@@ -57,14 +57,12 @@ namespace MyJournal.Controllers
                     .ThenInclude(st => st.Tones)
                 .SingleOrDefault(m => m.DailyInformationID == id);
 
-            foreach (var dt in dailyInformtion.ApiData.DocumentTones)
+            foreach (var t in dailyInformtion.ApiData.DocumentTones.Tones)
             {
-                foreach (var t in dt.Tones)
-                {
-                    errorText += t.ToneName + " " + t.Score;
-                    errorText += "</br>";
-                }
+                errorText += t.ToneName + " " + t.Score;
+                errorText += "</br>";
             }
+
             errorText += "<hr>";
             foreach (var st in dailyInformtion.ApiData.SentenceTones)
             {
@@ -77,7 +75,7 @@ namespace MyJournal.Controllers
                 errorText += "<hr>";
             }
 
-            return Content(errorText,"text/html");
+            return Content(errorText, "text/html");
         }
 
         // GET: DailyInformtions
@@ -145,7 +143,7 @@ namespace MyJournal.Controllers
                 if (!anaylzedText.Error)
                 {
                     ApiData apiData = new ApiData();
-                    apiData.DocumentTones = new List<ApiData.DocumentTone>();
+                    apiData.DocumentTones = new ApiData.DocumentTone();
                     apiData.SentenceTones = new List<ApiData.SentenceTone>();
 
                     foreach (var tone in anaylzedText.DocumentTone.Tones)
@@ -158,7 +156,7 @@ namespace MyJournal.Controllers
                             ToneName = tone.ToneName
                         });
                         dt.Tones = dtTone;
-                        apiData.DocumentTones.Add(dt);
+                        apiData.DocumentTones = (dt);
                     }
 
                     foreach (var sentence in anaylzedText.SentencesTone)
