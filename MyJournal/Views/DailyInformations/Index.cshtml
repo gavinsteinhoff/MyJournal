@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col bg-dark border-top border-light text-light sideMenuLink">
-        @foreach (var item in Model.OrderByDescending(x => x.DailyInformationDateTime))
+        @foreach (var item in Model.OrderByDescending(x => x.DailyInformationDateTime).Take(37))
         {
             <a asp-action="Details" asp-route-id="@item.DailyInformationID">
                 @item.DailyInformationDateTime.ToString("MM/dd/yy") - @Html.DisplayFor(modelItem => item.Title)
