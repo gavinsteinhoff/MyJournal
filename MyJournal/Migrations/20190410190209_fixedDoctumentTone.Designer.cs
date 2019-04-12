@@ -11,52 +11,15 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(MyJournalContext))]
-    partial class MyJournalContextModelSnapshot : ModelSnapshot
+    [Migration("20190410190209_fixedDoctumentTone")]
+    partial class fixedDoctumentTone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.3-rtm-10026")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("MyJournal.Models.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp");
-
-                    b.Property<string>("Email");
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail");
-
-                    b.Property<string>("NormalizedUserName");
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ApplicationUser");
-                });
 
             modelBuilder.Entity("MyJournal.Models.CustomModels.ApiData", b =>
                 {
@@ -126,8 +89,6 @@ namespace MyJournal.Migrations
                     b.Property<int>("CustomTemplateKey")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ApplicationUserId");
-
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -137,8 +98,6 @@ namespace MyJournal.Migrations
                     b.Property<string>("User");
 
                     b.HasKey("CustomTemplateKey");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("CustomTemplates");
                 });
@@ -192,8 +151,6 @@ namespace MyJournal.Migrations
                     b.Property<int>("SharingKey")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ApplicationUserId");
-
                     b.Property<string>("Giver");
 
                     b.Property<int>("PermissionLevel");
@@ -202,8 +159,6 @@ namespace MyJournal.Migrations
                         .IsRequired();
 
                     b.HasKey("SharingKey");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Sharings");
                 });
@@ -236,20 +191,6 @@ namespace MyJournal.Migrations
                     b.HasOne("MyJournal.Models.CustomModels.ApiData+SentenceTone")
                         .WithMany("Tones")
                         .HasForeignKey("SentenceToneID");
-                });
-
-            modelBuilder.Entity("MyJournal.Models.CustomModels.CustomTemplates", b =>
-                {
-                    b.HasOne("MyJournal.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
-                });
-
-            modelBuilder.Entity("MyJournal.Models.CustomModels.Sharing", b =>
-                {
-                    b.HasOne("MyJournal.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
                 });
 #pragma warning restore 612, 618
         }

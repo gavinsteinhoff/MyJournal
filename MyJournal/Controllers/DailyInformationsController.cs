@@ -57,14 +57,12 @@ namespace MyJournal.Controllers
                     .ThenInclude(st => st.Tones)
                 .SingleOrDefault(m => m.DailyInformationID == id);
 
-            foreach (var dt in dailyInformtion.ApiData.DocumentTones)
+            foreach (var t in dailyInformtion.ApiData.DocumentTones.Tones)
             {
-                foreach (var t in dt.Tones)
-                {
-                    errorText += t.ToneName + " " + t.Score;
-                    errorText += "</br>";
-                }
+                errorText += t.ToneName + " " + t.Score;
+                errorText += "</br>";
             }
+
             errorText += "<hr>";
             foreach (var st in dailyInformtion.ApiData.SentenceTones)
             {
@@ -77,7 +75,7 @@ namespace MyJournal.Controllers
                 errorText += "<hr>";
             }
 
-            return Content(errorText,"text/html");
+            return Content(errorText, "text/html");
         }
 
         // GET: DailyInformtions
@@ -146,36 +144,34 @@ namespace MyJournal.Controllers
                 if (!anaylzedText.Error)
                 {
                     ApiData apiData = new ApiData();
-                    apiData.DocumentTones = new List<ApiData.DocumentTone>();
+                    apiData.DocumentTones = new ApiData.DocumentTone();
                     apiData.SentenceTones = new List<ApiData.SentenceTone>();
 
+                    List<ApiData.Tone> dtTones = new List<ApiData.Tone>();
                     foreach (var tone in anaylzedText.DocumentTone.Tones)
                     {
-                        ApiData.DocumentTone dt = new ApiData.DocumentTone();
-                        List<ApiData.Tone> dtTone = new List<ApiData.Tone>();
-                        dtTone.Add(new ApiData.Tone
+                        dtTones.Add(new ApiData.Tone
                         {
                             Score = tone.Score,
                             ToneName = tone.ToneName
                         });
-                        dt.Tones = dtTone;
-                        apiData.DocumentTones.Add(dt);
                     }
-
+                    apiData.DocumentTones.Tones = dtTones;
+                    
                     foreach (var sentence in anaylzedText.SentencesTone)
                     {
                         ApiData.SentenceTone st = new ApiData.SentenceTone();
                         st.Text = sentence.Text;
-                        List<ApiData.Tone> stTone = new List<ApiData.Tone>();
+                        List<ApiData.Tone> stTones = new List<ApiData.Tone>();
                         foreach (var tone in sentence.Tones)
                         {
-                            stTone.Add(new ApiData.Tone
+                            stTones.Add(new ApiData.Tone
                             {
                                 Score = tone.Score,
                                 ToneName = tone.ToneName
                             });
                         }
-                        st.Tones = stTone;
+                        st.Tones = stTones;
                         apiData.SentenceTones.Add(st);
                     }
 
