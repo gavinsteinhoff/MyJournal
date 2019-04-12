@@ -100,6 +100,7 @@ namespace MyJournal.Controllers
                     ViewBag.Active365 = "active";
                     break;
             }
+
             return View(await _context.DailyInformations.Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld && x.User == User.Identity.Name).ToListAsync());
         }
 

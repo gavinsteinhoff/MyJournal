@@ -31,10 +31,9 @@ namespace MyJournal
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(config =>
-            {
-                config.SignIn.RequireConfirmedEmail = false;
-            }
-            )
+                {
+                    config.SignIn.RequireConfirmedEmail = false;
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -44,8 +43,8 @@ namespace MyJournal
             // Add application services.
             services.AddAuthentication()
                 .AddGoogle(googleOptions => { googleOptions.ClientId = Configuration["Authentication:Google:ClientId"]; googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"]; })
-                .AddFacebook(fb => {fb.ClientId = Configuration["Authentication:Facebook:AppId"]; fb.ClientSecret = Configuration["Authentication:Facebook:AppSecret"]; });
-    
+                .AddFacebook(fb => { fb.ClientId = Configuration["Authentication:Facebook:AppId"]; fb.ClientSecret = Configuration["Authentication:Facebook:AppSecret"]; });
+
 
             services.AddTransient<IEmailSender, EmailSender>();
 

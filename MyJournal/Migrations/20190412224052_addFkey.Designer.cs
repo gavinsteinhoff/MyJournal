@@ -11,9 +11,10 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(MyJournalContext))]
-    partial class MyJournalContextModelSnapshot : ModelSnapshot
+    [Migration("20190412224052_addFkey")]
+    partial class addFkey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,8 +127,6 @@ namespace MyJournal.Migrations
                     b.Property<int>("CustomTemplateKey")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ApplicationUserId");
-
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -137,8 +136,6 @@ namespace MyJournal.Migrations
                     b.Property<string>("User");
 
                     b.HasKey("CustomTemplateKey");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("CustomTemplates");
                 });
@@ -239,13 +236,6 @@ namespace MyJournal.Migrations
                     b.HasOne("MyJournal.Models.CustomModels.ApiData+SentenceTone")
                         .WithMany("Tones")
                         .HasForeignKey("SentenceToneID");
-                });
-
-            modelBuilder.Entity("MyJournal.Models.CustomModels.CustomTemplates", b =>
-                {
-                    b.HasOne("MyJournal.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("MyJournal.Models.CustomModels.Sharing", b =>

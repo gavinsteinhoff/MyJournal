@@ -11,6 +11,7 @@ namespace MyJournal.Models.CustomModels
     {
         [Key]
         public int SharingKey { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
         [HiddenInput]
         public string Giver { get; set; }
