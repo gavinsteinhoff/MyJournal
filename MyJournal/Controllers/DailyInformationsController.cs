@@ -134,6 +134,8 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DailyInformationID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinExercising,DownTime, UpTime, MinPhone, MinHobby, NumGoodThings, NumPoorThings, OverallDay, ExcitedForTomorrow")] DailyInformation dailyInformtion)
         {
+            dailyInformtion.HoursSlept = (dailyInformtion.DownTime.Hour - dailyInformtion.UpTime.Hour) /2;
+
             if (ModelState.IsValid)
             {
                 string errorText = string.Empty;
@@ -217,6 +219,8 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DailyInformationID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinExercising,DownTime, UpTime, MinPhone, MinHobby, NumGoodThings, NumPoorThings, OverallDay, ExcitedForTomorrow")] DailyInformation dailyInformtion)
         {
+            dailyInformtion.HoursSlept = (dailyInformtion.DownTime.Hour - dailyInformtion.UpTime.Hour) / 2;
+
             if (id != dailyInformtion.DailyInformationID)
             {
                 return NotFound();
