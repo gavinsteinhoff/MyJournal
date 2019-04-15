@@ -14,13 +14,8 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CustomTemplateKey" />
             <div class="form-group">
-                <label asp-for="User" class="control-label"></label>
-                <input asp-for="User" class="form-control" />
-                <span asp-validation-for="User" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Template" class="control-label"></label>
-                <input asp-for="Template" class="form-control" />
+                <textarea asp-for="Template" class="form-control"></textarea>
                 <span asp-validation-for="Template" class="text-danger"></span>
             </div>
             <div class="form-group">

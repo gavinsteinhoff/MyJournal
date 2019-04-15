@@ -33,6 +33,10 @@ namespace MyJournal.Services
                 string jsonResponse = toneAnalyzer.Tone(input).ResponseJson;
                 objResponse = WatsonApiResponse.FromJson(jsonResponse);
                 objResponse.Error = false;
+                if (objResponse.SentencesTone == null)
+                {
+                    objResponse.SentencesTone = new List<SentencesTone>().ToArray();
+                }
             }catch
             {
                 objResponse.Error = true;

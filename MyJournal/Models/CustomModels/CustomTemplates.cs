@@ -12,8 +12,7 @@ namespace MyJournal.Models.CustomModels
         [Key]
         public int CustomTemplateKey { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
-        [HiddenInput]
-        public string User { get; set; }
+
         [Required]
         public string Template { get; set; }
         [Required]

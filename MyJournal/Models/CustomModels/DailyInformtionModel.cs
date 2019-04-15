@@ -33,9 +33,6 @@ namespace MyJournal.Models.CustomModels
         [DataType(DataType.DateTime)]
         [HiddenInput]
         public DateTime DailyInformationDateTime { get; set; }
-
-        [HiddenInput]
-        public string User { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
         [Required]

@@ -2,27 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MyJournal.Data;
+using MyJournal.Models;
 using MyJournal.Models.CustomModels;
+using MyJournal.Services;
 
 namespace MyJournal.Controllers
 {
+    [Authorize]
     public class CustomTemplatesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailSender _emailSender;
+        private UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public CustomTemplatesController(ApplicationDbContext context)
+        public CustomTemplatesController(ApplicationDbContext context, IEmailSender emailSender, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _context = context;
+            _emailSender = emailSender;
+            _userManager = userManager;
+            _configuration = configuration;
         }
 
 
         private bool AuthorizeData(CustomTemplates customTemplate)
         {
-            if (customTemplate.User == User.Identity.Name)
+            if (customTemplate.ApplicationUser.Email == User.Identity.Name)
             {
                 return true;
             }
@@ -34,7 +46,7 @@ namespace MyJournal.Controllers
         // GET: CustomTemplates
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CustomTemplates.Where(x => x.User == User.Identity.Name).ToListAsync());
+            return View(await _context.CustomTemplates.Where(x => x.ApplicationUser.Email == User.Identity.Name).ToListAsync());
         }
 
         // GET: CustomTemplates/Details/5
@@ -46,6 +58,7 @@ namespace MyJournal.Controllers
             }
 
             var customTemplates = await _context.CustomTemplates
+                .Include(m => m.ApplicationUser)
                 .SingleOrDefaultAsync(m => m.CustomTemplateKey == id);
             if (customTemplates == null || !AuthorizeData(customTemplates))
             {
@@ -68,7 +81,7 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomTemplateKey,User,Template,Name")] CustomTemplates customTemplates)
         {
-            customTemplates.User = User.Identity.Name;
+            customTemplates.ApplicationUser = await _userManager.GetUserAsync(User);
             if (ModelState.IsValid)
             {
                 _context.Add(customTemplates);
@@ -86,7 +99,9 @@ namespace MyJournal.Controllers
                 return NotFound();
             }
 
-            var customTemplates = await _context.CustomTemplates.SingleOrDefaultAsync(m => m.CustomTemplateKey == id);
+            var customTemplates = await _context.CustomTemplates
+                .Include(m => m.ApplicationUser)
+                .SingleOrDefaultAsync(m => m.CustomTemplateKey == id);
             if (customTemplates == null || !AuthorizeData(customTemplates))
             {
                 return NotFound();
@@ -138,6 +153,7 @@ namespace MyJournal.Controllers
             }
 
             var customTemplates = await _context.CustomTemplates
+                .Include(m => m.ApplicationUser)
                 .SingleOrDefaultAsync(m => m.CustomTemplateKey == id);
             if (customTemplates == null || !AuthorizeData(customTemplates))
             {

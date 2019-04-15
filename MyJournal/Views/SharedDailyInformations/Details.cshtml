@@ -109,6 +109,9 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.DailyInformationID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <form id="giverName" asp-controller="SharedDailyInformations" asp-action="Index" method="post" role="form">
+        <button type="submit" class="btn btn-info" name="giverName" value="@Model.ApplicationUser.Email">
+            Back to list
+        </button>
+    </form>
 </div>

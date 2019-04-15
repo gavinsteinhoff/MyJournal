@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyJournal.Data;
+using MyJournal.Models;
 using MyJournal.Models.CustomModels;
+using MyJournal.Services;
 
 namespace MyJournal.Controllers
 {
@@ -16,10 +19,15 @@ namespace MyJournal.Controllers
     public class DailyInformationsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailSender _emailSender;
+        private UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
-        public DailyInformationsController(ApplicationDbContext context, IConfiguration configuration)
+
+        public DailyInformationsController(ApplicationDbContext context, IEmailSender emailSender, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _context = context;
+            _emailSender = emailSender;
+            _userManager = userManager;
             _configuration = configuration;
         }
 
@@ -37,7 +45,7 @@ namespace MyJournal.Controllers
         /// </returns>
         private bool AuthorizeData(DailyInformation dailyInformation)
         {
-            if (dailyInformation.User == User.Identity.Name)
+            if (dailyInformation.ApplicationUser.Email == User.Identity.Name)
             {
                 return true;
             }
@@ -101,7 +109,7 @@ namespace MyJournal.Controllers
                     break;
             }
 
-            return View(await _context.DailyInformations.Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld && x.User == User.Identity.Name).ToListAsync());
+            return View(await _context.DailyInformations.Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld && x.ApplicationUser.Email == User.Identity.Name).ToListAsync());
         }
 
         // GET: DailyInformtions/Details/5
@@ -113,6 +121,7 @@ namespace MyJournal.Controllers
             }
 
             var dailyInformtion = await _context.DailyInformations
+                .Include(m => m.ApplicationUser)
                 .SingleOrDefaultAsync(m => m.DailyInformationID == id);
 
             if (dailyInformtion == null || !AuthorizeData(dailyInformtion))
@@ -126,7 +135,7 @@ namespace MyJournal.Controllers
         // GET: DailyInformtions/Create
         public IActionResult Create()
         {
-            ViewData["CustomTemplates"] = Newtonsoft.Json.JsonConvert.SerializeObject(_context.CustomTemplates.Where(x => x.User == User.Identity.Name).ToList());
+            ViewData["CustomTemplates"] = Newtonsoft.Json.JsonConvert.SerializeObject(_context.CustomTemplates.Where(x => x.ApplicationUser.Email == User.Identity.Name).ToList());
             return View();
         }
 
@@ -186,7 +195,7 @@ namespace MyJournal.Controllers
                 }
                 #endregion
 
-                dailyInformtion.User = User.Identity.Name;
+                dailyInformtion.ApplicationUser = await _userManager.GetUserAsync(User);
                 dailyInformtion.DailyInformationDateTime = DateTime.Now;
                 _context.Add(dailyInformtion);
                 await _context.SaveChangesAsync();
@@ -204,7 +213,9 @@ namespace MyJournal.Controllers
                 return NotFound();
             }
 
-            var dailyInformtion = await _context.DailyInformations.SingleOrDefaultAsync(m => m.DailyInformationID == id);
+            var dailyInformtion = await _context.DailyInformations
+                .Include(m => m.ApplicationUser)
+                .SingleOrDefaultAsync(m => m.DailyInformationID == id);
 
             if (dailyInformtion == null || !AuthorizeData(dailyInformtion))
             {
@@ -257,6 +268,7 @@ namespace MyJournal.Controllers
             }
 
             var dailyInformtion = await _context.DailyInformations
+                .Include(m => m.ApplicationUser)
                 .SingleOrDefaultAsync(m => m.DailyInformationID == id);
             if (dailyInformtion == null || !AuthorizeData(dailyInformtion))
             {
@@ -271,7 +283,9 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var dailyInformtion = await _context.DailyInformations.SingleOrDefaultAsync(m => m.DailyInformationID == id);
+            var dailyInformtion = await _context.DailyInformations
+                .Include(m => m.ApplicationUser)
+                .SingleOrDefaultAsync(m => m.DailyInformationID == id);
             _context.DailyInformations.Remove(dailyInformtion);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
