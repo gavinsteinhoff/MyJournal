@@ -15,9 +15,9 @@ namespace MyJournal.Controllers
     [Authorize]
     public class DailyInformationsController : Controller
     {
-        private readonly MyJournalContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
-        public DailyInformationsController(MyJournalContext context, IConfiguration configuration)
+        public DailyInformationsController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
@@ -45,7 +45,7 @@ namespace MyJournal.Controllers
         }
         //End Custom
 
-        public ActionResult test(int? id)
+        public ActionResult testWatson(int? id)
         {
             string errorText = "";
 
@@ -78,8 +78,10 @@ namespace MyJournal.Controllers
             return Content(errorText, "text/html");
         }
 
-        // GET: DailyInformtions
-        public async Task<IActionResult> Index(int? daysOld = 30, string curr = "mood", string error = "")
+
+
+            // GET: DailyInformtions
+            public async Task<IActionResult> Index(int? daysOld = 30, string curr = "mood", string error = "")
         {
             ViewBag.curr = curr;
             ViewBag.error = error;

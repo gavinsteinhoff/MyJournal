@@ -11,12 +11,6 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Giver)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Giver)
-        </dd>
-        <dt>
             @Html.DisplayNameFor(model => model.Receiver)
         </dt>
         <dd>
@@ -31,6 +25,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.SharingKey">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.SharingID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

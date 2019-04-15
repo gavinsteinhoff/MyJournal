@@ -14,9 +14,9 @@ namespace MyJournal.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly MyJournalContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(MyJournalContext context)
+        public HomeController(ApplicationDbContext context)
         {
             _context = context;
         }

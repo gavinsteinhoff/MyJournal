@@ -14,9 +14,9 @@ namespace MyJournal.Controllers
     [Authorize]
     public class SharedDailyInformationsController : Controller
     {
-        private readonly MyJournalContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public SharedDailyInformationsController(MyJournalContext context)
+        public SharedDailyInformationsController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -24,8 +24,8 @@ namespace MyJournal.Controllers
         // GET: SharedDailyInformations
         public async Task<IActionResult> Index(string giverName)
         {
-            var sharings = _context.Sharings.FirstOrDefault(x => x.Giver == giverName);
-            if (sharings != null && sharings.Receiver == User.Identity.Name) 
+            var sharings = _context.Sharings.FirstOrDefault(x => x.Giver.Email == giverName);
+            if (sharings != null && sharings.Receiver == User.Identity.Name)
             {
                 return View(await _context.DailyInformations.Where(x => x.User == giverName).ToListAsync());
             }
@@ -43,7 +43,7 @@ namespace MyJournal.Controllers
             var dailyInformation = await _context.DailyInformations
                 .SingleOrDefaultAsync(m => m.DailyInformationID == id);
 
-            var auth = _context.Sharings.FirstOrDefault(x => x.Giver == dailyInformation.User && x.Receiver == User.Identity.Name);
+            var auth = _context.Sharings.FirstOrDefault(x => x.Giver.Email == dailyInformation.ApplicationUser.Email && x.Getter.Email == User.Identity.Name);
 
             if (dailyInformation == null || auth == null)
             {

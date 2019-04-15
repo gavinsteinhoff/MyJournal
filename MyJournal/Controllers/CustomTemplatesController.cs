@@ -12,9 +12,9 @@ namespace MyJournal.Controllers
 {
     public class CustomTemplatesController : Controller
     {
-        private readonly MyJournalContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CustomTemplatesController(MyJournalContext context)
+        public CustomTemplatesController(ApplicationDbContext context)
         {
             _context = context;
         }

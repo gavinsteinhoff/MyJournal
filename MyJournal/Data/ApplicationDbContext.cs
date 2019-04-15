@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MyJournal.Models;
+using MyJournal.Models.CustomModels;
 
 namespace MyJournal.Data
 {
@@ -22,5 +23,10 @@ namespace MyJournal.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        public DbSet<DailyInformation> DailyInformations { get; set; }
+        public DbSet<CustomTemplates> CustomTemplates { get; set; }
+        public DbSet<Sharing> Sharings { get; set; }
+        public DbSet<ApiData> ApiDatas { get; set; }
     }
 }

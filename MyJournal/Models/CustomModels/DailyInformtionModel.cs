@@ -36,6 +36,7 @@ namespace MyJournal.Models.CustomModels
 
         [HiddenInput]
         public string User { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
         [Required]
         public int UserMood { get; set; }

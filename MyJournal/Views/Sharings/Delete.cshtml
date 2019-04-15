@@ -12,12 +12,6 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Giver)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Giver)
-        </dd>
-        <dt>
             @Html.DisplayNameFor(model => model.Receiver)
         </dt>
         <dd>
@@ -32,7 +26,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="SharingKey" />
+        <input type="hidden" asp-for="SharingID" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
         <a asp-action="Index">Back to List</a>
     </form>

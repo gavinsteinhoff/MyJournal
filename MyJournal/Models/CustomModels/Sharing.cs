@@ -10,15 +10,14 @@ namespace MyJournal.Models.CustomModels
     public class Sharing
     {
         [Key]
-        public int SharingKey { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public int SharingID { get; set; }
 
-        [HiddenInput]
-        public string Giver { get; set; }
+        public ApplicationUser Giver { get; set; }
+        public ApplicationUser Getter { get; set; }
 
         [Required]
         public string Receiver { get; set; }
-        
+
         public int PermissionLevel { get; set; }
     }
 }

@@ -25,19 +25,22 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Where(x => x.Giver == User.Identity.Name))
+        @if (Model.Count() != 0)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Receiver)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PermissionLevel)
-                </td>
-                <td>
-                    <a class="btn btn-info" asp-action="Delete" asp-route-id="@item.SharingKey">Remove Permission</a>
-                </td>
-            </tr>
+            @foreach (var item in Model.Where(x => x.Giver.Email == User.Identity.Name))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Receiver)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PermissionLevel)
+                    </td>
+                    <td>
+                        <a class="btn btn-info" asp-action="Delete" asp-route-id="@item.SharingID">Remove Permission</a>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
@@ -58,23 +61,26 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Where(x => x.Receiver == User.Identity.Name))
+        @if (Model.Count() != 0)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Giver)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PermissionLevel)
-                </td>
-                <td>
-                    <form id="giverName" asp-controller="SharedDailyInformations" asp-action="Index" method="post" role="form">
-                        <button type="submit" class="btn btn-info" name="giverName" value="@item.Giver">
-                            View Data
-                        </button>
-                    </form>
-                </td>
-            </tr>
+            @foreach (var item in Model.Where(x => x.Getter.Email == User.Identity.Name))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Giver.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PermissionLevel)
+                    </td>
+                    <td>
+                        <form id="giverName" asp-controller="SharedDailyInformations" asp-action="Index" method="post" role="form">
+                            <button type="submit" class="btn btn-info" name="giverName" value="@item.Giver.Email">
+                                View Data
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>

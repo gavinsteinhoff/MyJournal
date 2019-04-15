@@ -17,30 +17,34 @@ namespace MyJournal.Controllers
     [Authorize]
     public class SharingsController : Controller
     {
-        private readonly MyJournalContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
+        private UserManager<ApplicationUser> _userManager;
 
-
-        public SharingsController(MyJournalContext context, IEmailSender emailSender)
+        public SharingsController(ApplicationDbContext context, IEmailSender emailSender, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _emailSender = emailSender;
+            _userManager = userManager;
         }
 
-        public bool CheckAuth(Sharing sharing)
+        public async Task<bool> CheckAuthAsync(Sharing sharing)
         {
-            if (sharing.Giver == User.Identity.Name)
+            if (sharing.Giver == await _userManager.GetUserAsync(User))
             {
                 return true;
             }
             return false;
         }
 
-
-        // GET: Sharings
+        //GET: Sharings
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Sharings.Where(x => x.Receiver == User.Identity.Name || x.Giver == User.Identity.Name).ToListAsync());
+            return View(await _context.Sharings
+                .Where(m => m.Giver.Email == User.Identity.Name || m.Getter.Email == User.Identity.Name)
+                .Include(m => m.Giver)
+                .Include(m => m.Getter)
+                .ToListAsync());
         }
 
         // GET: Sharings/Details/5
@@ -52,8 +56,10 @@ namespace MyJournal.Controllers
             }
 
             var sharing = await _context.Sharings
-                .SingleOrDefaultAsync(m => m.SharingKey == id);
-            if (sharing == null)
+                .SingleOrDefaultAsync(m => m.SharingID == id);
+
+            bool auth = await CheckAuthAsync(sharing);
+            if (sharing == null || !auth)
             {
                 return NotFound();
             }
@@ -72,72 +78,23 @@ namespace MyJournal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SharingKey,Giver,Receiver,PermissionLevel")] Sharing sharing)
+        public async Task<IActionResult> Create([Bind("SharingID,Receiver,PermissionLevel")] Sharing sharing)
         {
             if (ModelState.IsValid)
             {
-                sharing.Giver = User.Identity.Name;
-            
+                sharing.Giver = await _userManager.GetUserAsync(User);
+                sharing.Getter = _userManager.Users.FirstOrDefault(u => u.Email == sharing.Receiver);
+                
                 string link = "<a href='https://mydailyjournal.azurewebsites.net/Sharings'>link</a>";
-                string msg = $"{sharing.Giver} has shared their My Journal with you. \nHere is their link: {link}";
+                string msg = $"{sharing.Giver.Email} has shared their My Journal with you. \nHere is their link: {link}";
                 await _emailSender.SendEmailAsync(sharing.Receiver, "Someone shared with you on My Journal", msg);
 
-                msg = $"You have shared your MyJournal with {sharing.Receiver}\nIf this was not you, you can remove it here: {link}\nAlso you will need to reset your password";
-                await _emailSender.SendEmailAsync(sharing.Giver, "You Shared with Someone on My Journal", msg);
+                link = "<a href='https://mydailyjournal.azurewebsites.net/Manage/SetPassword'>link</a>";
+                msg = $@"You have shared your MyJournal with {sharing.Receiver}\nIf this was not you, you can remove it here: {link}\nAlso reset your password here {link}";
+                await _emailSender.SendEmailAsync(sharing.Getter.Email, "You Shared with Someone on My Journal", msg);
 
                 _context.Add(sharing);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(sharing);
-        }
-
-        // GET: Sharings/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var sharing = await _context.Sharings.SingleOrDefaultAsync(m => m.SharingKey == id);
-            if (sharing == null || !CheckAuth(sharing))
-            {
-                return NotFound();
-            }
-            return View(sharing);
-        }
-
-        // POST: Sharings/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SharingKey,Giver,Receiver,PermissionLevel")] Sharing sharing)
-        {
-            if (id != sharing.SharingKey)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(sharing);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SharingExists(sharing.SharingKey))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
             return View(sharing);
@@ -152,8 +109,10 @@ namespace MyJournal.Controllers
             }
 
             var sharing = await _context.Sharings
-                .SingleOrDefaultAsync(m => m.SharingKey == id);
-            if (sharing == null || !CheckAuth(sharing))
+                .SingleOrDefaultAsync(m => m.SharingID == id);
+
+            bool auth = await CheckAuthAsync(sharing);
+            if (sharing == null || !auth)
             {
                 return NotFound();
             }
@@ -166,7 +125,7 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sharing = await _context.Sharings.SingleOrDefaultAsync(m => m.SharingKey == id);
+            var sharing = await _context.Sharings.SingleOrDefaultAsync(m => m.SharingID == id);
             _context.Sharings.Remove(sharing);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -174,7 +133,7 @@ namespace MyJournal.Controllers
 
         private bool SharingExists(int id)
         {
-            return _context.Sharings.Any(e => e.SharingKey == id);
+            return _context.Sharings.Any(e => e.SharingID == id);
         }
     }
 }
