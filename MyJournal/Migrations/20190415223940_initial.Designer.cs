@@ -11,7 +11,7 @@ using System;
 namespace MyJournal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190415211619_initial")]
+    [Migration("20190415223940_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -256,8 +256,6 @@ namespace MyJournal.Migrations
                     b.Property<string>("Template")
                         .IsRequired();
 
-                    b.Property<string>("User");
-
                     b.HasKey("CustomTemplateKey");
 
                     b.HasIndex("ApplicationUserId");
@@ -269,6 +267,8 @@ namespace MyJournal.Migrations
                 {
                     b.Property<int>("DailyInformationID")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationUserId");
 
                     b.Property<DateTime>("DailyInformationDateTime");
 
@@ -300,11 +300,11 @@ namespace MyJournal.Migrations
 
                     b.Property<DateTime>("UpTime");
 
-                    b.Property<string>("User");
-
                     b.Property<int>("UserMood");
 
                     b.HasKey("DailyInformationID");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("DailyInformations");
                 });
@@ -314,9 +314,9 @@ namespace MyJournal.Migrations
                     b.Property<int>("SharingID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ApplicationUserGiverId");
+                    b.Property<string>("GetterId");
 
-                    b.Property<string>("ApplicationUserReceiverId");
+                    b.Property<string>("GiverId");
 
                     b.Property<int>("PermissionLevel");
 
@@ -325,29 +325,11 @@ namespace MyJournal.Migrations
 
                     b.HasKey("SharingID");
 
-                    b.HasIndex("ApplicationUserGiverId");
-
-                    b.HasIndex("ApplicationUserReceiverId");
-
-                    b.ToTable("Sharings");
-                });
-
-            modelBuilder.Entity("MyJournal.Models.CustomModels.Test", b =>
-                {
-                    b.Property<string>("TestId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("GetterId");
-
-                    b.Property<string>("GiverId");
-
-                    b.HasKey("TestId");
-
                     b.HasIndex("GetterId");
 
                     b.HasIndex("GiverId");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Sharings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -432,18 +414,14 @@ namespace MyJournal.Migrations
                         .HasForeignKey("ApplicationUserId");
                 });
 
-            modelBuilder.Entity("MyJournal.Models.CustomModels.Sharing", b =>
+            modelBuilder.Entity("MyJournal.Models.CustomModels.DailyInformation", b =>
                 {
-                    b.HasOne("MyJournal.Models.ApplicationUser", "ApplicationUserGiver")
+                    b.HasOne("MyJournal.Models.ApplicationUser", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("ApplicationUserGiverId");
-
-                    b.HasOne("MyJournal.Models.ApplicationUser", "ApplicationUserReceiver")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserReceiverId");
+                        .HasForeignKey("ApplicationUserId");
                 });
 
-            modelBuilder.Entity("MyJournal.Models.CustomModels.Test", b =>
+            modelBuilder.Entity("MyJournal.Models.CustomModels.Sharing", b =>
                 {
                     b.HasOne("MyJournal.Models.ApplicationUser", "Getter")
                         .WithMany("Getter")

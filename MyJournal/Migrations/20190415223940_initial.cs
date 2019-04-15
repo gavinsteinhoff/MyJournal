@@ -49,34 +49,6 @@ namespace MyJournal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DailyInformations",
-                columns: table => new
-                {
-                    DailyInformationID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DailyInformationDateTime = table.Column<DateTime>(nullable: false),
-                    DownTime = table.Column<DateTime>(nullable: false),
-                    ExcitedForTomorrow = table.Column<int>(nullable: false),
-                    GeneratedMood = table.Column<int>(nullable: false),
-                    HoursSlept = table.Column<int>(nullable: false),
-                    JournalText = table.Column<string>(nullable: false),
-                    MinExercising = table.Column<int>(nullable: false),
-                    MinHobby = table.Column<int>(nullable: false),
-                    MinPhone = table.Column<int>(nullable: false),
-                    NumGoodThings = table.Column<int>(nullable: false),
-                    NumPoorThings = table.Column<int>(nullable: false),
-                    OverallDay = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(nullable: false),
-                    UpTime = table.Column<DateTime>(nullable: false),
-                    User = table.Column<string>(nullable: true),
-                    UserMood = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DailyInformations", x => x.DailyInformationID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DocumentTone",
                 columns: table => new
                 {
@@ -202,8 +174,7 @@ namespace MyJournal.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ApplicationUserId = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: false),
-                    Template = table.Column<string>(nullable: false),
-                    User = table.Column<string>(nullable: true)
+                    Template = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -217,13 +188,47 @@ namespace MyJournal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DailyInformations",
+                columns: table => new
+                {
+                    DailyInformationID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    DailyInformationDateTime = table.Column<DateTime>(nullable: false),
+                    DownTime = table.Column<DateTime>(nullable: false),
+                    ExcitedForTomorrow = table.Column<int>(nullable: false),
+                    GeneratedMood = table.Column<int>(nullable: false),
+                    HoursSlept = table.Column<int>(nullable: false),
+                    JournalText = table.Column<string>(nullable: false),
+                    MinExercising = table.Column<int>(nullable: false),
+                    MinHobby = table.Column<int>(nullable: false),
+                    MinPhone = table.Column<int>(nullable: false),
+                    NumGoodThings = table.Column<int>(nullable: false),
+                    NumPoorThings = table.Column<int>(nullable: false),
+                    OverallDay = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
+                    UpTime = table.Column<DateTime>(nullable: false),
+                    UserMood = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DailyInformations", x => x.DailyInformationID);
+                    table.ForeignKey(
+                        name: "FK_DailyInformations_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sharings",
                 columns: table => new
                 {
                     SharingID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApplicationUserGiverId = table.Column<string>(nullable: true),
-                    ApplicationUserReceiverId = table.Column<string>(nullable: true),
+                    GetterId = table.Column<string>(nullable: true),
+                    GiverId = table.Column<string>(nullable: true),
                     PermissionLevel = table.Column<int>(nullable: false),
                     Receiver = table.Column<string>(nullable: false)
                 },
@@ -231,38 +236,13 @@ namespace MyJournal.Migrations
                 {
                     table.PrimaryKey("PK_Sharings", x => x.SharingID);
                     table.ForeignKey(
-                        name: "FK_Sharings_AspNetUsers_ApplicationUserGiverId",
-                        column: x => x.ApplicationUserGiverId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Sharings_AspNetUsers_ApplicationUserReceiverId",
-                        column: x => x.ApplicationUserReceiverId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tests",
-                columns: table => new
-                {
-                    TestId = table.Column<string>(nullable: false),
-                    GetterId = table.Column<string>(nullable: true),
-                    GiverId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tests", x => x.TestId);
-                    table.ForeignKey(
-                        name: "FK_Tests_AspNetUsers_GetterId",
+                        name: "FK_Sharings_AspNetUsers_GetterId",
                         column: x => x.GetterId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Tests_AspNetUsers_GiverId",
+                        name: "FK_Sharings_AspNetUsers_GiverId",
                         column: x => x.GiverId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -392,28 +372,23 @@ namespace MyJournal.Migrations
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DailyInformations_ApplicationUserId",
+                table: "DailyInformations",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SentenceTone_ApiDataID",
                 table: "SentenceTone",
                 column: "ApiDataID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sharings_ApplicationUserGiverId",
+                name: "IX_Sharings_GetterId",
                 table: "Sharings",
-                column: "ApplicationUserGiverId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Sharings_ApplicationUserReceiverId",
-                table: "Sharings",
-                column: "ApplicationUserReceiverId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tests_GetterId",
-                table: "Tests",
                 column: "GetterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tests_GiverId",
-                table: "Tests",
+                name: "IX_Sharings_GiverId",
+                table: "Sharings",
                 column: "GiverId");
 
             migrationBuilder.CreateIndex(
@@ -451,16 +426,10 @@ namespace MyJournal.Migrations
                 name: "Sharings");
 
             migrationBuilder.DropTable(
-                name: "Tests");
-
-            migrationBuilder.DropTable(
                 name: "Tone");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "SentenceTone");
@@ -473,6 +442,9 @@ namespace MyJournal.Migrations
 
             migrationBuilder.DropTable(
                 name: "DocumentTone");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }
