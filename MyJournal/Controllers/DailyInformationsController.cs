@@ -86,10 +86,22 @@ namespace MyJournal.Controllers
             return Content(errorText, "text/html");
         }
 
+        public ActionResult Watson()
+        {
+            List<DailyInformation> dailyInformation = _context.DailyInformations
+                .Include(m => m.ApplicationUser)
+                .Where(m => m.ApplicationUser.Email == User.Identity.Name).ToList();
+
+            WatsonApi toneApi = new WatsonApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
+            toneApi.GenerateAllReports(dailyInformation, _context, _configuration);
+
+            return Content("", "text/html");
+        }
 
 
-            // GET: DailyInformtions
-            public async Task<IActionResult> Index(int? daysOld = 30, string curr = "mood", string error = "")
+
+        // GET: DailyInformtions
+        public async Task<IActionResult> Index(int? daysOld = 30, string curr = "mood", string error = "")
         {
             ViewBag.curr = curr;
             ViewBag.error = error;
@@ -146,56 +158,21 @@ namespace MyJournal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DailyInformationID,Title,JournalText,DailyInformationDateTime,User,UserMood,GeneratedMood,MinExercising,DownTime, UpTime, MinPhone, MinHobby, NumGoodThings, NumPoorThings, OverallDay, ExcitedForTomorrow")] DailyInformation dailyInformtion)
         {
-            dailyInformtion.HoursSlept = (dailyInformtion.DownTime.Hour - dailyInformtion.UpTime.Hour) /2;
+            dailyInformtion.HoursSlept = (dailyInformtion.DownTime.Hour - dailyInformtion.UpTime.Hour) / 2;
 
             if (ModelState.IsValid)
             {
                 string errorText = string.Empty;
-                #region WatsonApiCode
-                Services.WatsonApi toneApi = new Services.WatsonApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
-                Services.WatsonApiResponse anaylzedText = toneApi.Anaylze(dailyInformtion.JournalText);
-                if (!anaylzedText.Error)
+                ApiData apiData = dailyInformtion.CreateWatsonReport(_configuration);
+                if (apiData != null)
                 {
-                    ApiData apiData = new ApiData();
-                    apiData.DocumentTones = new ApiData.DocumentTone();
-                    apiData.SentenceTones = new List<ApiData.SentenceTone>();
-
-                    List<ApiData.Tone> dtTones = new List<ApiData.Tone>();
-                    foreach (var tone in anaylzedText.DocumentTone.Tones)
-                    {
-                        dtTones.Add(new ApiData.Tone
-                        {
-                            Score = tone.Score,
-                            ToneName = tone.ToneName
-                        });
-                    }
-                    apiData.DocumentTones.Tones = dtTones;
-                    
-                    foreach (var sentence in anaylzedText.SentencesTone)
-                    {
-                        ApiData.SentenceTone st = new ApiData.SentenceTone();
-                        st.Text = sentence.Text;
-                        List<ApiData.Tone> stTones = new List<ApiData.Tone>();
-                        foreach (var tone in sentence.Tones)
-                        {
-                            stTones.Add(new ApiData.Tone
-                            {
-                                Score = tone.Score,
-                                ToneName = tone.ToneName
-                            });
-                        }
-                        st.Tones = stTones;
-                        apiData.SentenceTones.Add(st);
-                    }
-
                     _context.Add(apiData);
                     dailyInformtion.ApiData = apiData;
                 }
                 else
                 {
-                    errorText = anaylzedText.ErrorText + "Form still submited.";
+                    errorText = "Cound't Get Report from Watson Api. You Form was still submited.";
                 }
-                #endregion
 
                 dailyInformtion.ApplicationUser = await _userManager.GetUserAsync(User);
                 dailyInformtion.DailyInformationDateTime = DateTime.Now;

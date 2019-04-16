@@ -29,6 +29,7 @@ namespace MyJournal.Migrations
                 {
                     Id = table.Column<string>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
+                    AllowWatson = table.Column<bool>(nullable: false, defaultValue: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
@@ -253,16 +254,17 @@ namespace MyJournal.Migrations
                 name: "ApiDatas",
                 columns: table => new
                 {
-                    ApiDataID = table.Column<int>(nullable: false),
-                    DailyInformationID = table.Column<int>(nullable: false),
+                    ApiDataID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DailyInformationId = table.Column<int>(nullable: false),
                     DocumentTonesDocumentToneID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ApiDatas", x => x.ApiDataID);
                     table.ForeignKey(
-                        name: "FK_ApiDatas_DailyInformations_ApiDataID",
-                        column: x => x.ApiDataID,
+                        name: "FK_ApiDatas_DailyInformations_DailyInformationId",
+                        column: x => x.DailyInformationId,
                         principalTable: "DailyInformations",
                         principalColumn: "DailyInformationID",
                         onDelete: ReferentialAction.Cascade);
@@ -321,6 +323,12 @@ namespace MyJournal.Migrations
                         principalColumn: "SentenceToneID",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApiDatas_DailyInformationId",
+                table: "ApiDatas",
+                column: "DailyInformationId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiDatas_DocumentTonesDocumentToneID",

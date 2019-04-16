@@ -5,13 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyJournal.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace MyJournal.Services
 {
     public class WatsonApi
     {
         ToneAnalyzerService toneAnalyzer;
-        public WatsonApi(string key,string url,string version)
+        public WatsonApi(string key, string url, string version)
         {
             TokenOptions ReportTokenOptions = new TokenOptions()
             {
@@ -20,7 +22,7 @@ namespace MyJournal.Services
             };
             toneAnalyzer = new ToneAnalyzerService(ReportTokenOptions, version);
         }
-        
+
         public WatsonApiResponse Anaylze(string text)
         {
             ToneInput input = new ToneInput();
@@ -37,7 +39,8 @@ namespace MyJournal.Services
                 {
                     objResponse.SentencesTone = new List<SentencesTone>().ToArray();
                 }
-            }catch
+            }
+            catch
             {
                 objResponse.Error = true;
                 objResponse.ErrorText = "Counld not get Watson API data. ";
@@ -45,5 +48,26 @@ namespace MyJournal.Services
 
             return objResponse;
         }
+
+        public void GenerateAllReports(List<Models.CustomModels.DailyInformation> dailyInformations, ApplicationDbContext _context, IConfiguration _configuration)
+        {
+            foreach (var daily in dailyInformations)
+            {
+                if (daily.ApiData == null)
+                {
+                    if (daily.ApplicationUser.AllowWatson)
+                    {
+                        Models.CustomModels.ApiData apiData = daily.CreateWatsonReport(_configuration);
+                        if (apiData != null)
+                        {
+                            apiData.DailyInformation = daily;
+                            _context.Add(apiData);
+                        }
+                    }
+                }
+            }
+            _context.SaveChanges();
+        }
+
     }
 }

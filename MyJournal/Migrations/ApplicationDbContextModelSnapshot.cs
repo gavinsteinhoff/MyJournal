@@ -135,6 +135,10 @@ namespace MyJournal.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<bool>("AllowWatson")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(true);
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -181,13 +185,17 @@ namespace MyJournal.Migrations
 
             modelBuilder.Entity("MyJournal.Models.CustomModels.ApiData", b =>
                 {
-                    b.Property<int>("ApiDataID");
+                    b.Property<int>("ApiDataID")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("DailyInformationID");
+                    b.Property<int>("DailyInformationId");
 
                     b.Property<int?>("DocumentTonesDocumentToneID");
 
                     b.HasKey("ApiDataID");
+
+                    b.HasIndex("DailyInformationId")
+                        .IsUnique();
 
                     b.HasIndex("DocumentTonesDocumentToneID");
 
@@ -380,7 +388,7 @@ namespace MyJournal.Migrations
                 {
                     b.HasOne("MyJournal.Models.CustomModels.DailyInformation", "DailyInformation")
                         .WithOne("ApiData")
-                        .HasForeignKey("MyJournal.Models.CustomModels.ApiData", "ApiDataID")
+                        .HasForeignKey("MyJournal.Models.CustomModels.ApiData", "DailyInformationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MyJournal.Models.CustomModels.ApiData+DocumentTone", "DocumentTones")

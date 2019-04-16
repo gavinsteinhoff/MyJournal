@@ -8,10 +8,9 @@ namespace MyJournal.Models.CustomModels
 {
     public class ApiData
     {
-        [ForeignKey("DailyInformation")]
         public int ApiDataID { get; set; }
-        public int DailyInformationID { get; set; }
-        public  DailyInformation DailyInformation { get; set; }
+        public int DailyInformationId { get; set; }
+        public DailyInformation DailyInformation { get; set; }
         public DocumentTone DocumentTones { get; set; }
         public ICollection<SentenceTone> SentenceTones { get; set; }
 

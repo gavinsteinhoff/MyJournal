@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Configuration;
 
 namespace MyJournal.Models.CustomModels
 {
@@ -20,6 +20,49 @@ namespace MyJournal.Models.CustomModels
        
     public class DailyInformation
     {
+        public ApiData CreateWatsonReport(IConfiguration _configuration)
+        {
+            Services.WatsonApi toneApi = new Services.WatsonApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
+            Services.WatsonApiResponse anaylzedText = toneApi.Anaylze(JournalText);
+            ApiData apiData = new ApiData();
+
+            if (!anaylzedText.Error)
+            {
+                apiData.DocumentTones = new ApiData.DocumentTone();
+                apiData.SentenceTones = new List<ApiData.SentenceTone>();
+
+                List<ApiData.Tone> dtTones = new List<ApiData.Tone>();
+                foreach (var tone in anaylzedText.DocumentTone.Tones)
+                {
+                    dtTones.Add(new ApiData.Tone
+                    {
+                        Score = tone.Score,
+                        ToneName = tone.ToneName
+                    });
+                }
+                apiData.DocumentTones.Tones = dtTones;
+
+                foreach (var sentence in anaylzedText.SentencesTone)
+                {
+                    ApiData.SentenceTone st = new ApiData.SentenceTone();
+                    st.Text = sentence.Text;
+                    List<ApiData.Tone> stTones = new List<ApiData.Tone>();
+                    foreach (var tone in sentence.Tones)
+                    {
+                        stTones.Add(new ApiData.Tone
+                        {
+                            Score = tone.Score,
+                            ToneName = tone.ToneName
+                        });
+                    }
+                    st.Tones = stTones;
+                    apiData.SentenceTones.Add(st);
+                }
+            }
+            apiData.DailyInformation = this;
+            return apiData;
+        }
+
         [Key]
         public int DailyInformationID { get; set; }
 
@@ -33,6 +76,7 @@ namespace MyJournal.Models.CustomModels
         [DataType(DataType.DateTime)]
         [HiddenInput]
         public DateTime DailyInformationDateTime { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
         [Required]

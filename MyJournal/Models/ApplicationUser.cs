@@ -14,5 +14,6 @@ namespace MyJournal.Models
         public ICollection<CustomModels.Sharing> Giver { get; set; }
         [InverseProperty("Getter")]
         public ICollection<CustomModels.Sharing> Getter { get; set; }
+        public bool AllowWatson { get; set; }
     }
 }
