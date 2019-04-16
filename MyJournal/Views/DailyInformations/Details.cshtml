@@ -7,104 +7,170 @@
 
 <div class="row">
     <div class="col-md-2 bg-custom"></div>
-    <div class="col">
-        s
+    <div class="col bg-info--50">
+        <table class="table table-borderless table-hover table-striped mt-5">
+            <tbody>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.DailyInformationDateTime)</td>
+                    <td>
+                        @Html.DisplayFor(model => model.DailyInformationDateTime)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Title)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.JournalText)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.JournalText)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.UserMood)
+                    </td>
+                    <td>
+                        @switch (Model.UserMood)
+                        {
+                            case 1:
+                                <div class="moodPic mood1"></div>
+                                break;
+                            case 2:
+                                <div class="moodPic mood2"></div>
+                                break;
+                            case 3:
+                                <div class="moodPic mood3"></div>
+                                break;
+                            case 4:
+                                <div class="moodPic mood4"></div>
+                                break;
+                            case 5:
+                                <div class="moodPic mood5"></div>
+                                break;
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.DownTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.DownTime)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.UpTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.UpTime)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.HoursSlept)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.HoursSlept)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.MinExercising)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.MinExercising)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.MinPhone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.MinPhone)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.MinHobby)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.MinHobby)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.NumPoorThings)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.NumPoorThings)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.OverallDay)
+                    </td>
+                    <td>
+                        @switch (Model.OverallDay)
+                        {
+                            case 1:
+                                <div class="moodPic mood1"></div>
+                                break;
+                            case 2:
+                                <div class="moodPic mood2"></div>
+                                break;
+                            case 3:
+                                <div class="moodPic mood3"></div>
+                                break;
+                            case 4:
+                                <div class="moodPic mood4"></div>
+                                break;
+                            case 5:
+                                <div class="moodPic mood5"></div>
+                                break;
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.ExcitedForTomorrow)
+
+                    </td>
+                    <td>
+                        @switch (Model.ExcitedForTomorrow)
+                        {
+                            case 1:
+                                <div class="moodPic mood1"></div>
+                                break;
+                            case 2:
+                                <div class="moodPic mood2"></div>
+                                break;
+                            case 3:
+                                <div class="moodPic mood3"></div>
+                                break;
+                            case 4:
+                                <div class="moodPic mood4"></div>
+                                break;
+                            case 5:
+                                <div class="moodPic mood5"></div>
+                                break;
+                        }
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
     </div>
     <div class="col-md-2 bg-custom"></div>
 </div>
 
-
-
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.DailyInformationDateTime)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DailyInformationDateTime)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.JournalText)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.JournalText)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UserMood)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UserMood)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DownTime)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DownTime)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UpTime)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UpTime)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.HoursSlept)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.HoursSlept)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.MinExercising)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.MinExercising)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.MinPhone)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.MinPhone)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.MinHobby)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.MinHobby)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.NumGoodThings)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.NumGoodThings)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.NumPoorThings)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.NumPoorThings)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.OverallDay)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.OverallDay)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ExcitedForTomorrow)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ExcitedForTomorrow)
-        </dd>
-
-    </dl>
-</div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.DailyInformationID">Edit</a> |
     <a asp-action="Index">Back to List</a>

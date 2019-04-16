@@ -96,3 +96,12 @@ svg {
     .loginBtn--google:focus {
         background: #E74B37;
     }
+
+
+
+
+div.moodPic {
+    height: 75px;
+    width: 75px;
+    background-size: cover;
+}
