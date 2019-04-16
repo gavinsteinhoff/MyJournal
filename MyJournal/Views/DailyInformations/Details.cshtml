@@ -30,6 +30,10 @@
                     </td>
                     <td>
                         @Html.DisplayFor(model => model.JournalText)
+
+                        <br />
+                        <br />
+                        <a class="btn btn-info" asp-action="Index">Anaylze Text</a>
                     </td>
                 </tr>
                 <tr>
@@ -164,14 +168,10 @@
                         }
                     </td>
                 </tr>
-
             </tbody>
         </table>
+        <a class="btn btn-info" asp-action="Index">Back to List</a>
     </div>
     <div class="col-md-2 bg-custom"></div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.DailyInformationID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
