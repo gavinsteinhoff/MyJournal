@@ -52,7 +52,7 @@
                     <div class="stat" id="overalMood">
                         @Model.Count(x => x.UserMood >= 3)
                     </div>
-                    Days With Good Mood
+                    Number of Days Users Had Good Mood
                 </div>
 
                 <div class="stat-holder">
@@ -165,6 +165,15 @@
                 dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Select(x => x.DailyInformationDateTime.ToShortDateString()).Distinct().ToList()))')
             } else {
                 dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.DailyInformationDateTime.Month) + " " + x.DailyInformationDateTime.Year).Distinct().ToList()))')
+                dateLabels.pop();
+              //  if ("@ViewBag.Active183" == 'active') {
+                //    
+                //}
+                //else {
+                    
+                //  }
+
+                
             }
             switch (type) {
                 case "mood":
