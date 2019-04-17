@@ -86,7 +86,7 @@ namespace MyJournal.Controllers
             return Content(errorText, "text/html");
         }
 
-        public ActionResult Watson(int? id)
+        public async Task<ActionResult> WatsonAsync(int? id)
         {
             var dailyInformtion = _context.DailyInformations
                 .Include(c => c.ApiData)
@@ -95,6 +95,23 @@ namespace MyJournal.Controllers
                 .Include(c => c.ApiData.SentenceTones)
                     .ThenInclude(st => st.Tones)
                 .SingleOrDefault(m => m.DailyInformationID == id);
+
+            if (!dailyInformtion.GoneThroughWatson)
+            {
+                ApiData apiData = dailyInformtion.CreateWatsonReport(_configuration);
+                if (apiData != null)
+                {
+                    dailyInformtion.ApiData = apiData;
+                    dailyInformtion.GoneThroughWatson = true;
+                    await _context.AddAsync(apiData);
+                    await _context.AddAsync(dailyInformtion);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return RedirectToAction("Index", new { error = "Cound't Get Report from Watson Api. You Form was still submited." });
+                }
+            }
 
             return View(dailyInformtion.ApiData);
         }
