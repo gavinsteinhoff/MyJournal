@@ -108,9 +108,9 @@
         List<double> workOutByMonth = new List<double>();
         foreach (var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Month)).Distinct().ToList()))
         {
-            moodByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.UserMood));
-            sleepByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.HoursSlept));
-            workOutByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.MinExercising));
+            moodByMonth.Add(Math.Round(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.UserMood),1));
+            sleepByMonth.Add(Math.Round(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.HoursSlept),1));
+            workOutByMonth.Add(Math.Round(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.MinExercising),0));
         }
         List<int> moodByCount = new List<int>();
         moodByCount.Add(Model.Count(x => x.UserMood == 1));
