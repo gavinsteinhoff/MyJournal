@@ -104,7 +104,6 @@ namespace MyJournal.Controllers
                     dailyInformtion.ApiData = apiData;
                     dailyInformtion.GoneThroughWatson = true;
                     await _context.AddAsync(apiData);
-                    await _context.AddAsync(dailyInformtion);
                     await _context.SaveChangesAsync();
                 }
                 else
