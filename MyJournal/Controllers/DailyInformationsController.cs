@@ -86,7 +86,7 @@ namespace MyJournal.Controllers
             return Content(errorText, "text/html");
         }
 
-        public async Task<ActionResult> WatsonAsync(int? id)
+        public async Task<ActionResult> Watson(int? id)
         {
             var dailyInformtion = _context.DailyInformations
                 .Include(c => c.ApiData)
