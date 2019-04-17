@@ -86,16 +86,17 @@ namespace MyJournal.Controllers
             return Content(errorText, "text/html");
         }
 
-        public ActionResult Watson()
+        public ActionResult Watson(int? id)
         {
-            List<DailyInformation> dailyInformation = _context.DailyInformations
-                .Include(m => m.ApplicationUser)
-                .Where(m => m.ApplicationUser.Email == User.Identity.Name).ToList();
+            var dailyInformtion = _context.DailyInformations
+                .Include(c => c.ApiData)
+                .Include(c => c.ApiData.DocumentTones)
+                    .ThenInclude(dt => dt.Tones)
+                .Include(c => c.ApiData.SentenceTones)
+                    .ThenInclude(st => st.Tones)
+                .SingleOrDefault(m => m.DailyInformationID == id);
 
-            WatsonApi toneApi = new WatsonApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
-            toneApi.GenerateAllReports(dailyInformation, _context, _configuration);
-
-            return Content("", "text/html");
+            return View(dailyInformtion.ApiData);
         }
 
 
