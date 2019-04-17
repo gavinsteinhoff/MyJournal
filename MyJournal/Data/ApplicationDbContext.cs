@@ -25,6 +25,9 @@ namespace MyJournal.Data
             builder.Entity<ApplicationUser>()
                 .Property(p => p.AllowWatson)
                 .HasDefaultValue(true);
+            builder.Entity<DailyInformation>()
+                .Property(p => p.GoneThroughWatson)
+                .HasDefaultValue(false);
         }
 
         public DbSet<DailyInformation> DailyInformations { get; set; }
