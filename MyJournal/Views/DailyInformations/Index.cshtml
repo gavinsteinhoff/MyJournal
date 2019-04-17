@@ -144,7 +144,11 @@
             if (time == "day") {
                 global.dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList()))')
             } else {
-                global.dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.DailyInformationDateTime.Month) + " " + x.DailyInformationDateTime.Year).Distinct().ToList()))')
+                @{ 
+                    var test = Model.OrderBy(t => t.DailyInformationDateTime).Select(x => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.DailyInformationDateTime.Month)).Distinct().ToList();
+                }
+                
+                global.dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(test))')
             }
             switch (type) {
                 case "mood":
