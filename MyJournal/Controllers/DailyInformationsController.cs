@@ -169,6 +169,7 @@ namespace MyJournal.Controllers
                 {
                     _context.Add(apiData);
                     dailyInformtion.ApiData = apiData;
+                    dailyInformtion.GoneThroughWatson = true;
                 }
                 else
                 {
