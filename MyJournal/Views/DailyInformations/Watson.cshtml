@@ -1,0 +1,41 @@
+﻿@model MyJournal.Models.CustomModels.ApiData
+
+@{
+    ViewData["Title"] = "Watson";
+}
+
+<h2>Watson</h2>
+
+<table class="table table-striped table-hover table-info">
+ 
+    <tbody>
+        <th> Document Tones</th>
+        <th></th>
+        @foreach (var t in Model.DocumentTones.Tones)
+        {
+            <tr>
+                
+                <td scope="">@t.ToneName</td>
+                <td>@t.Score</td>
+            </tr>
+        }
+        <th> Sentences Tones </th>
+        <th></th>    
+        @foreach (var t in Model.SentenceTones)
+        {
+            <tr>
+                <th> @t.Text</th>
+                <th></th>
+                @foreach (var w in t.Tones)
+                {
+                 <tr> 
+                 
+                <td>@w.ToneName</td>
+                <td> @w.Score</td>
+                 </tr>
+                }
+            </tr>
+        }
+
+        </tbody>
+</table>

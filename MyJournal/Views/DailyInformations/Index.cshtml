@@ -7,7 +7,7 @@
 
 
 <div class="row">
-    <div class="col bg-custom text-light sideMenuLink">
+    <div class="col bg-custom text-light sideMenuLink pt-3">
         @foreach (var item in Model.OrderByDescending(x => x.DailyInformationDateTime).Take(37))
         {
             <a asp-action="Details" asp-route-id="@item.DailyInformationID">
@@ -108,9 +108,9 @@
         List<double> workOutByMonth = new List<double>();
         foreach (var month in (Model.OrderBy(t => t.DailyInformationDateTime).Select(x => (x.DailyInformationDateTime.Month)).Distinct().ToList()))
         {
-            moodByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.UserMood));
-            sleepByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.HoursSlept));
-            workOutByMonth.Add(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.MinExercising));
+            moodByMonth.Add(Math.Round(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.UserMood),1));
+            sleepByMonth.Add(Math.Round(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.HoursSlept),1));
+            workOutByMonth.Add(Math.Round(Model.Where(x => x.DailyInformationDateTime.Month == month).Average(x => x.MinExercising),0));
         }
         List<int> moodByCount = new List<int>();
         moodByCount.Add(Model.Count(x => x.UserMood == 1));
@@ -144,7 +144,11 @@
             if (time == "day") {
                 global.dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => x.DailyInformationDateTime.ToShortDateString()).ToList()))')
             } else {
-                global.dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OrderBy(t => t.DailyInformationDateTime).Select(x => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.DailyInformationDateTime.Month) + " " + x.DailyInformationDateTime.Year).Distinct().ToList()))')
+                @{ 
+                    var test = Model.OrderBy(t => t.DailyInformationDateTime).Select(x => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.DailyInformationDateTime.Month)).Distinct().ToList();
+                }
+                
+                global.dateLabels = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(test))')
             }
             switch (type) {
                 case "mood":

@@ -86,16 +86,33 @@ namespace MyJournal.Controllers
             return Content(errorText, "text/html");
         }
 
-        public ActionResult Watson()
+        public async Task<ActionResult> Watson(int? id)
         {
-            List<DailyInformation> dailyInformation = _context.DailyInformations
-                .Include(m => m.ApplicationUser)
-                .Where(m => m.ApplicationUser.Email == User.Identity.Name).ToList();
+            var dailyInformtion = _context.DailyInformations
+                .Include(c => c.ApiData)
+                .Include(c => c.ApiData.DocumentTones)
+                    .ThenInclude(dt => dt.Tones)
+                .Include(c => c.ApiData.SentenceTones)
+                    .ThenInclude(st => st.Tones)
+                .SingleOrDefault(m => m.DailyInformationID == id);
 
-            WatsonApi toneApi = new WatsonApi(_configuration["WatsonToneKey"], "https://gateway.watsonplatform.net/tone-analyzer/api", "2017-09-21");
-            toneApi.GenerateAllReports(dailyInformation, _context, _configuration);
+            if (!dailyInformtion.GoneThroughWatson)
+            {
+                ApiData apiData = dailyInformtion.CreateWatsonReport(_configuration);
+                if (apiData != null)
+                {
+                    dailyInformtion.ApiData = apiData;
+                    dailyInformtion.GoneThroughWatson = true;
+                    await _context.AddAsync(apiData);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return RedirectToAction("Index", new { error = "Cound't Get Report from Watson Api. You Form was still submited." });
+                }
+            }
 
-            return Content("", "text/html");
+            return View(dailyInformtion.ApiData);
         }
 
 
@@ -168,6 +185,7 @@ namespace MyJournal.Controllers
                 {
                     _context.Add(apiData);
                     dailyInformtion.ApiData = apiData;
+                    dailyInformtion.GoneThroughWatson = true;
                 }
                 else
                 {

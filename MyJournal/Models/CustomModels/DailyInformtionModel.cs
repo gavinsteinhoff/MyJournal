@@ -85,6 +85,9 @@ namespace MyJournal.Models.CustomModels
         [HiddenInput]
         public int GeneratedMood { get; set; }
 
+        [HiddenInput]
+        public bool GoneThroughWatson { get; set; }
+
         [Required]
         [Range(0, 1440)]
         [Display(Name = "Minutes Exercising")]
