@@ -1,6 +1,6 @@
 # My Journal
 
-My Journal is a website designed for daily journaling online along with statistics about your journaling and your day. 
+My Journal is a website designed for daily journaling online along with statistics about your journaling and your day
 
 ## Requirments
 - IDE
