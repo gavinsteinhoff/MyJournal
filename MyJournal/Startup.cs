@@ -39,10 +39,7 @@ namespace MyJournal
 
 
             // Add application services.
-            services.AddAuthentication()
-                .AddGoogle(googleOptions => { googleOptions.ClientId = Configuration["Authentication:Google:ClientId"]; googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"]; })
-                .AddFacebook(fb => { fb.ClientId = Configuration["Authentication:Facebook:AppId"]; fb.ClientSecret = Configuration["Authentication:Facebook:AppSecret"]; });
-
+            services.AddAuthentication();
 
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -57,9 +54,7 @@ namespace MyJournal
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -70,12 +65,12 @@ namespace MyJournal
 
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Home}/{action=Index}/{id?}");
+            //});
         }
     }
 }
