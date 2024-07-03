@@ -64,7 +64,17 @@ namespace MyJournal.Controllers
                     ViewBag.Active365 = "active";
                     break;
             }
-            return View(await _context.DailyInformations.OrderBy(x => x.DailyInformationDateTime).Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld).ToListAsync());
+
+            var output = await _context.
+                DailyInformations
+                .OrderBy(x => x.DailyInformationDateTime)
+                .ToListAsync();
+
+            output = output
+                .Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld)
+                .ToList();
+
+            return View(output);
         }
     }
 }
