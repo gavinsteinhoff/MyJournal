@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyJournal.Data;
 using MyJournal.Models;
 using MyJournal.Models.CustomModels;
 using MyJournal.Services;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyJournal.Controllers
 {
@@ -84,7 +81,7 @@ namespace MyJournal.Controllers
             {
                 sharing.Giver = await _userManager.GetUserAsync(User);
                 sharing.Getter = _userManager.Users.FirstOrDefault(u => u.Email == sharing.Receiver);
-                
+
                 string link = "<a href='https://mydailyjournal.azurewebsites.net/Sharings'>link</a>";
                 string msg = $"{sharing.Giver.Email} has shared their My Journal with you. \nHere is their link: {link}";
                 await _emailSender.SendEmailAsync(sharing.Receiver, "Someone shared with you on My Journal", msg);

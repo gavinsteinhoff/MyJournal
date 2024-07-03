@@ -1,22 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
-using System.Collections.Generic;
+
+#nullable disable
 
 namespace MyJournal.Migrations
 {
-    public partial class initial : Migration
+    /// <inheritdoc />
+    public partial class Initial : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,22 +29,22 @@ namespace MyJournal.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    AllowWatson = table.Column<bool>(nullable: false, defaultValue: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AllowWatson = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,8 +55,8 @@ namespace MyJournal.Migrations
                 name: "DocumentTone",
                 columns: table => new
                 {
-                    DocumentToneID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                    DocumentToneID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
                 },
                 constraints: table =>
                 {
@@ -65,11 +67,11 @@ namespace MyJournal.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
-                    RoleId = table.Column<string>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -86,11 +88,11 @@ namespace MyJournal.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -107,10 +109,10 @@ namespace MyJournal.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
-                    ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,8 +129,8 @@ namespace MyJournal.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,10 +153,10 @@ namespace MyJournal.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -171,11 +173,11 @@ namespace MyJournal.Migrations
                 name: "CustomTemplates",
                 columns: table => new
                 {
-                    CustomTemplateKey = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApplicationUserId = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: false),
-                    Template = table.Column<string>(nullable: false)
+                    CustomTemplateKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Template = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -184,33 +186,32 @@ namespace MyJournal.Migrations
                         name: "FK_CustomTemplates_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "DailyInformations",
                 columns: table => new
                 {
-                    DailyInformationID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApplicationUserId = table.Column<string>(nullable: true),
-                    DailyInformationDateTime = table.Column<DateTime>(nullable: false),
-                    DownTime = table.Column<DateTime>(nullable: false),
-                    ExcitedForTomorrow = table.Column<int>(nullable: false),
-                    GeneratedMood = table.Column<int>(nullable: false),
-                    GoneThroughWatson = table.Column<bool>(nullable: false, defaultValue: false),
-                    HoursSlept = table.Column<int>(nullable: false),
-                    JournalText = table.Column<string>(nullable: false),
-                    MinExercising = table.Column<int>(nullable: false),
-                    MinHobby = table.Column<int>(nullable: false),
-                    MinPhone = table.Column<int>(nullable: false),
-                    NumGoodThings = table.Column<int>(nullable: false),
-                    NumPoorThings = table.Column<int>(nullable: false),
-                    OverallDay = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(nullable: false),
-                    UpTime = table.Column<DateTime>(nullable: false),
-                    UserMood = table.Column<int>(nullable: false)
+                    DailyInformationID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JournalText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DailyInformationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserMood = table.Column<int>(type: "int", nullable: false),
+                    GeneratedMood = table.Column<int>(type: "int", nullable: false),
+                    GoneThroughWatson = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    MinExercising = table.Column<int>(type: "int", nullable: false),
+                    HoursSlept = table.Column<int>(type: "int", nullable: false),
+                    DownTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MinPhone = table.Column<int>(type: "int", nullable: false),
+                    NumGoodThings = table.Column<int>(type: "int", nullable: false),
+                    NumPoorThings = table.Column<int>(type: "int", nullable: false),
+                    OverallDay = table.Column<int>(type: "int", nullable: false),
+                    ExcitedForTomorrow = table.Column<int>(type: "int", nullable: false),
+                    MinHobby = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -220,19 +221,19 @@ namespace MyJournal.Migrations
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Sharings",
                 columns: table => new
                 {
-                    SharingID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    GetterId = table.Column<string>(nullable: true),
-                    GiverId = table.Column<string>(nullable: true),
-                    PermissionLevel = table.Column<int>(nullable: false),
-                    Receiver = table.Column<string>(nullable: false)
+                    SharingID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GiverId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    GetterId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Receiver = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PermissionLevel = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -241,24 +242,22 @@ namespace MyJournal.Migrations
                         name: "FK_Sharings_AspNetUsers_GetterId",
                         column: x => x.GetterId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Sharings_AspNetUsers_GiverId",
                         column: x => x.GiverId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "ApiDatas",
                 columns: table => new
                 {
-                    ApiDataID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DailyInformationId = table.Column<int>(nullable: false),
-                    DocumentTonesDocumentToneID = table.Column<int>(nullable: true)
+                    ApiDataID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DailyInformationId = table.Column<int>(type: "int", nullable: false),
+                    DocumentTonesDocumentToneID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -274,17 +273,17 @@ namespace MyJournal.Migrations
                         column: x => x.DocumentTonesDocumentToneID,
                         principalTable: "DocumentTone",
                         principalColumn: "DocumentToneID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "SentenceTone",
                 columns: table => new
                 {
-                    SentenceToneID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApiDataID = table.Column<int>(nullable: true),
-                    Text = table.Column<string>(nullable: true)
+                    SentenceToneID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ApiDataID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -293,20 +292,19 @@ namespace MyJournal.Migrations
                         name: "FK_SentenceTone_ApiDatas_ApiDataID",
                         column: x => x.ApiDataID,
                         principalTable: "ApiDatas",
-                        principalColumn: "ApiDataID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "ApiDataID");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Tone",
                 columns: table => new
                 {
-                    ToneID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DocumentToneID = table.Column<int>(nullable: true),
-                    Score = table.Column<double>(nullable: false),
-                    SentenceToneID = table.Column<int>(nullable: true),
-                    ToneName = table.Column<string>(nullable: true)
+                    ToneID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ToneName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Score = table.Column<double>(type: "float", nullable: false),
+                    DocumentToneID = table.Column<int>(type: "int", nullable: true),
+                    SentenceToneID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -315,14 +313,12 @@ namespace MyJournal.Migrations
                         name: "FK_Tone_DocumentTone_DocumentToneID",
                         column: x => x.DocumentToneID,
                         principalTable: "DocumentTone",
-                        principalColumn: "DocumentToneID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "DocumentToneID");
                     table.ForeignKey(
                         name: "FK_Tone_SentenceTone_SentenceToneID",
                         column: x => x.SentenceToneID,
                         principalTable: "SentenceTone",
-                        principalColumn: "SentenceToneID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "SentenceToneID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -411,6 +407,7 @@ namespace MyJournal.Migrations
                 column: "SentenceToneID");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

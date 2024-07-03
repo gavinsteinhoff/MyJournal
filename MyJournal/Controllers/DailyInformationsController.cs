@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyJournal.Data;
 using MyJournal.Models;
 using MyJournal.Models.CustomModels;
 using MyJournal.Services;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyJournal.Controllers
 {
@@ -138,7 +136,16 @@ namespace MyJournal.Controllers
                     break;
             }
 
-            return View(await _context.DailyInformations.Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld && x.ApplicationUser.Email == User.Identity.Name).ToListAsync());
+            var output = await _context.
+                DailyInformations
+                .OrderBy(x => x.DailyInformationDateTime)
+                .ToListAsync();
+
+            output = output
+                .Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld)
+                .ToList();
+
+            return View(output);
         }
 
         // GET: DailyInformtions/Details/5
@@ -194,7 +201,7 @@ namespace MyJournal.Controllers
 
                 dailyInformtion.ApplicationUser = await _userManager.GetUserAsync(User);
                 dailyInformtion.DailyInformationDateTime = DateTime.Now;
-                _context.Add(dailyInformtion);
+                _context.DailyInformations.Add(dailyInformtion);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", new { error = errorText });
             }
