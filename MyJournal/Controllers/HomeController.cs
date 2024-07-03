@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Globalization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyJournal.Data;
 using MyJournal.Models;
-using MyJournal.Models.CustomModels;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyJournal.Controllers
 {
@@ -67,7 +64,7 @@ namespace MyJournal.Controllers
                     ViewBag.Active365 = "active";
                     break;
             }
-            return View(await _context.DailyInformations.OrderBy(x=> x.DailyInformationDateTime).Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld).ToListAsync());
+            return View(await _context.DailyInformations.OrderBy(x => x.DailyInformationDateTime).Where(x => (DateTime.Now - x.DailyInformationDateTime).TotalDays <= daysOld).ToListAsync());
         }
     }
 }

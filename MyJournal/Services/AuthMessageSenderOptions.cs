@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MyJournal.Services
+﻿namespace MyJournal.Services
 {
     public class AuthMessageSenderOptions
     {

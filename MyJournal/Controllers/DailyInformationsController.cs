@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyJournal.Data;
 using MyJournal.Models;
 using MyJournal.Models.CustomModels;
 using MyJournal.Services;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyJournal.Controllers
 {

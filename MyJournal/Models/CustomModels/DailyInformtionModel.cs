@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace MyJournal.Models.CustomModels
 {
@@ -17,7 +14,7 @@ namespace MyJournal.Models.CustomModels
 
     //    public DbSet<Journal> Journals { get; set; }
     //}
-       
+
     public class DailyInformation
     {
         public ApiData CreateWatsonReport(IConfiguration _configuration)
@@ -71,7 +68,7 @@ namespace MyJournal.Models.CustomModels
 
         [Required]
         [Display(Name = "Journal Entry")]
-        public string JournalText {get;set;}
+        public string JournalText { get; set; }
 
         [DataType(DataType.DateTime)]
         [HiddenInput]
@@ -93,7 +90,7 @@ namespace MyJournal.Models.CustomModels
         [Display(Name = "Minutes Exercising")]
         public int MinExercising { get; set; }
 
-        [Display(Name ="Hours of Sleep")]
+        [Display(Name = "Hours of Sleep")]
         public int HoursSlept { get; set; }
 
         [Required]
@@ -131,7 +128,7 @@ namespace MyJournal.Models.CustomModels
         [Display(Name = "How many minutes did you spend on a hobby")]
         public int MinHobby { get; set; }
 
-        public  ApiData ApiData { get; set; }
+        public ApiData ApiData { get; set; }
 
     }
 }
